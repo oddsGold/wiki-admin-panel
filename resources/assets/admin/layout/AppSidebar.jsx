@@ -10,6 +10,7 @@ import LogoDark from "../../images/logo/logo-dark.svg";
 import LogoIcon from "../../images/logo/logo-icon.svg";
 import {useGetMenuItemsQuery} from "../redux/auth/authApiSlice.js";
 import {convertMenu} from "../components/utils/convertMenu.js";
+import {Loading} from "../components/loadingBar/Loading.jsx";
 
 const AppSidebar = () => {
     const {isExpanded, isMobileOpen, isHovered, setIsHovered} = useSidebar();
@@ -231,7 +232,14 @@ const AppSidebar = () => {
                                     <HorizontaLDots className="size-6"/>
                                 )}
                             </h2>
-                            {renderMenuItems(navItems, "main")}
+                            {isMenuItemsLoading ? (
+                                <div
+                                    className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-gray-900/60 rounded-3xl">
+                                    <Loading/>
+                                </div>
+                            ) : (
+                                renderMenuItems(navItems, "main")
+                            )}
                         </div>
                     </div>
                 </nav>

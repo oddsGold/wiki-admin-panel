@@ -1,44 +1,23 @@
 import React from "react";
 import {Routes, Route, Navigate} from 'react-router-dom';
-// import HomePage from '../pages/HomePage/HomePage.jsx';
-// import UserPage from "../pages/UserPage/UserPage.jsx";
-// import PageNotFound from "../pages/404/404.jsx";
-// import EditUserPage from "../pages/UserPage/EditUserPage.jsx";
-// import CreateUserPage from "../pages/UserPage/CreateUserPage.jsx";
-// import RolePage from "../pages/RolePage/RolePage.jsx";
-// import CreateRolePage from "../pages/RolePage/CreateRolePage.jsx";
-// import EditRolePage from "../pages/RolePage/EditRolePage.jsx";
-// import BlogPage from "../pages/BlogPage/BlogPage.jsx";
-// import CreateBlogPage from "../pages/BlogPage/CreateBlogPage.jsx";
-// import EditBlogPage from "../pages/BlogPage/EditBlogPage.jsx";
-// import FaqPage from "../pages/FaqPage/FaqPage.jsx";
-// import CreateFaqPage from "../pages/FaqPage/CreateFaqPage.jsx";
-// import EditFaqPage from "../pages/FaqPage/EditFaqPage.jsx";
-// import ImagePage from "../pages/DownloadPage/ImagePage.jsx";
-// import FilePage from "../pages/DownloadPage/FilePage.jsx";
-// import TypePage from "../pages/MemosPage/Type/TypePage.jsx";
-// import CreateTypePage from "../pages/MemosPage/Type/CreateTypePage.jsx";
-// import EditTypePage from "../pages/MemosPage/Type/EditTypePage.jsx";
-// import MemoPage from "../pages/MemosPage/Memo/MemoPage.jsx";
-// import CreateMemoPage from "../pages/MemosPage/Memo/CreateMemoPage.jsx";
-// import EditMemoPage from "../pages/MemosPage/Memo/EditMemoPage.jsx";
-// import VideoPage from "../pages/VideoPage/VideoPage.jsx";
-// import CreateVideoPage from "../pages/VideoPage/CreateVideoPage.jsx";
-// import EditVideoPage from "../pages/VideoPage/EditVideoPage.jsx";
 import Home from "../pages/Dashboard/Home.jsx";
-import NotFound from "../pages/OtherPage/NotFound.js";
+import NotFound from "../pages/OtherPage/NotFound.jsx";
 import UserProfiles from "../pages/Profile/UserProfiles.jsx";
+import UserPage from "../pages/UserPage/UserPage.jsx";
+import CreateUserPage from "../pages/UserPage/CreateUserPage.jsx";
+import EditUserPage from "../pages/UserPage/EditUserPage.jsx";
+import ImagePage from "../pages/DownloadPage/ImagePage.jsx";
 
 const PrivateRoutes = () => {
     return (
         <Routes>
-            <Route path="/dashboard" element={<Home />} />
+            <Route path="/admin/dashboard" element={<Home />} />
 
             <Route path="/admin/profile" element={<UserProfiles />}/>
 
-            {/*<Route path="/users" exact element={<UserPage/>}/>*/}
-            {/*<Route path="/users/:id/edit" element={<EditUserPage/>}/>*/}
-            {/*<Route path="/users/create" element={<CreateUserPage/>}/>*/}
+            <Route path="/admin/users" exact element={<UserPage />}/>
+            <Route path="/admin/users/:id/edit" element={<EditUserPage/>}/>
+            <Route path="/admin/users/create" element={<CreateUserPage />}/>
 
             {/*<Route path="/roles" exact element={<RolePage/>}/>*/}
             {/*<Route path="/roles/:id/edit" element={<EditRolePage/>}/>*/}
@@ -52,8 +31,8 @@ const PrivateRoutes = () => {
             {/*<Route path="/faqs/:id/edit" element={<EditFaqPage/>}/>*/}
             {/*<Route path="/faqs/create" element={<CreateFaqPage/>}/>*/}
 
-            {/*<Route path="/images" exact element={<ImagePage/>}/>*/}
-            {/*<Route path="/files" exact element={<FilePage/>}/>*/}
+            <Route path="/admin/images" exact element={<ImagePage/>}/>
+            {/*<Route path="/admin/files" exact element={<FilePage/>}/>*/}
 
             {/*<Route path="/users/memos/types" exact element={<TypePage/>}/>*/}
             {/*<Route path="/users/memos/types/:id/edit" element={<EditTypePage/>}/>*/}
@@ -67,8 +46,8 @@ const PrivateRoutes = () => {
             {/*<Route path="/videos/:id/edit" element={<EditVideoPage/>}/>*/}
             {/*<Route path="/videos/create" element={<CreateVideoPage/>}/>*/}
 
-            <Route path="/404" element={<NotFound />}/>
-            <Route path="*" element={<Navigate to="/admin/dashboard"/>}/>
+            <Route path="/admin/404" element={<NotFound />}/>
+            <Route path="*" element={<Navigate to="/admin/404"/>}/>
         </Routes>
     );
 };

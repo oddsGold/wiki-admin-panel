@@ -1,0 +1,181 @@
+import React from "react";
+import {Form, Field, Formik} from "formik";
+import * as Yup from "yup";
+import Label from "../Label.jsx";
+import FormikInput from "../input/FormikInput.jsx";
+import FormikSelect from "../input/FormikSelect.jsx";
+import Button from "../../ui/button/Button.jsx";
+import Switch from "../switch/Switch.jsx";
+import {Link} from "react-router-dom";
+
+export default function UserForm({
+                                     current = null,
+                                     defaultCurrent,
+                                     handleSubmit,
+                                     enableReinitialize = true,
+                                     roles = [],
+                                     backLinkPath,
+                                     password = false
+                                 }) {
+    return (
+        <Formik
+            initialValues={current ? current : defaultCurrent}
+            enableReinitialize={enableReinitialize}
+            validationSchema={Yup.object().shape({
+                login: Yup.string().required('Поле login обов\'язкове до заповнення'),
+                email: Yup.string().email('Недійсна електронна адреса').required('Поле email обов\'язкове до заповнення'),
+                role: Yup.mixed().required('Поле role обов\'язкове до заповнення'),
+                password: password
+                    ? Yup.string()
+                        .max(255, 'Максимально допустимо 180 символів')
+                        .min(8, 'Мінімально 8 символів')
+                        .required('Поле обов\'язкове до заповнення')
+                    : Yup.string()
+                        .max(255, 'Максимально допустимо 180 символів')
+                        .min(8, 'Мінімально 8 символів'),
+                password_confirmation: password
+                    ? Yup.string()
+                        .oneOf([Yup.ref('password')], 'Паролі не збігаються')
+                        .required('Поле обов\'язкове до заповнення')
+                    : Yup.string()
+                        .oneOf([Yup.ref('password')], 'Паролі не збігаються')
+            })}
+            onSubmit={(values) => {
+                const valuesToSend = {
+                    ...values,
+                    tfa: values.tfa ? 1 : 0,
+                };
+                handleSubmit(valuesToSend);
+            }}
+        >
+            {({isSubmitting, handleChange, handleBlur, values, errors, touched, setFieldValue}) => (
+                <Form autoComplete="off">
+                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                        <div className="space-y-6">
+                            <div className="pb-3">
+                                <Label>
+                                    Login <span className="text-error-500">*</span>{" "}
+                                </Label>
+                                <Field
+                                    id="login"
+                                    placeholder="Enter your login"
+                                    name="login"
+                                    autoFocus
+                                    component={FormikInput}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={Boolean(errors.login && touched.login)}
+                                    helperText={touched.login && errors.login}
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-6">
+                            <div className="pb-3">
+                                <Label>
+                                    Email <span className="text-error-500">*</span>{" "}
+                                </Label>
+                                <Field
+                                    id="email"
+                                    placeholder="Enter your email"
+                                    name="email"
+                                    autoFocus
+                                    component={FormikInput}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={Boolean(errors.email && touched.email)}
+                                    helperText={touched.email && errors.email}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                        <div className="space-y-6">
+                            <div className="pb-3">
+                                <Label>
+                                    Password <span className="text-error-500">*</span>{" "}
+                                </Label>
+                                <Field
+                                    name="password"
+                                    placeholder="Password"
+                                    type="password"
+                                    id="password"
+                                    component={FormikInput}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    // value={values.password}
+                                    error={Boolean(errors.password && touched.password)}
+                                    helperText={touched.password && errors.password}
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-6">
+                            <div className="pb-3">
+                                <Label>
+                                    Confirm password <span className="text-error-500">*</span>{" "}
+                                </Label>
+                                <Field
+                                    name="password_confirmation"
+                                    placeholder="Confirm password"
+                                    type="password"
+                                    id="password_confirmation"
+                                    component={FormikInput}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={Boolean(errors.password_confirmation && touched.password_confirmation)}
+                                    helperText={touched.password_confirmation && errors.password_confirmation}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className="pb-3">
+                            <Label>
+                                Role <span className="text-error-500">*</span>{" "}
+                            </Label>
+                            <Field
+                                id="role"
+                                placeholder="Select role"
+                                name="role"
+                                autoFocus
+                                component={FormikSelect}
+                                options={roles.map((role) => ({
+                                    label: role.name,
+                                    value: role.id,
+                                }))}
+                                error={Boolean(errors.role && touched.role)}
+                                helperText={touched.role && errors.role}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="pb-5 pt-3 flex items-center gap-3">
+                        <Switch
+                            label="Включити двофакторну автентифікацію"
+                            defaultChecked={Boolean(values.tfa)}
+                            onChange={() => setFieldValue('tfa', !values.tfa)}
+                        />
+                    </div>
+
+                    <div>
+                        <div className="flex flex-wrap gap-4 justify-start">
+                            <Link
+                                to={backLinkPath.current}
+                                className="inline-flex w-40 items-center justify-center gap-2 rounded-lg px-4 py-2 transition bg-green-500 text-white shadow-theme-xs hover:bg-green-600 disabled:bg-green-300">
+                                Back
+                            </Link>
+                            <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                size="sm"
+                                className="w-40"
+                            >
+                                Save
+                            </Button>
+                        </div>
+                    </div>
+                </Form>
+            )}
+        </Formik>
+    )
+}

@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import {useUpdateEmailMutation} from "../../redux/users/usersApiSlice.js";
 import FormikInput from "../form/input/FormikInput.jsx";
 import {Loading} from "../loadingBar/Loading.jsx";
+import {acceptHandler, errorHandler} from "../utils/toastHandler.js";
 
 export default function UserInfoCard({user}) {
     const {isOpen, openModal, closeModal} = useModal();
@@ -18,9 +19,16 @@ export default function UserInfoCard({user}) {
     });
 
     const handleSave = async (values, {setSubmitting}) => {
-        await updateEmail({data: values}).unwrap();
-        setSubmitting(false);
-        closeModal();
+        try{
+            await updateEmail({data: values}).unwrap();
+            setSubmitting(false);
+            closeModal();
+            acceptHandler("Email успішно змінено")
+        }catch (error) {
+            errorHandler(error);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (

@@ -3,11 +3,14 @@ import { api } from "../operations.js";
 export const usersApiSlice = api.injectEndpoints({
     endpoints: builder => ({
         users: builder.query({
-            query: ({ page = 1, limit = 30 }) => ({
-                url: `/users?page=${page}&limit=${limit}`,
-            }),
+            query: ({ page = 1, limit = 30, sort = '-id' }) => {
+                const params = new URLSearchParams({ page, limit, sort });
+                return {
+                    url: `/users?${params.toString()}`,
+                };
+            },
             providesTags: ['users'],
-            transformResponse: (response, meta, arg) => response.data,
+            transformResponse: (response) => response,
         }),
         createUser: builder.mutation({
             query: ({data}) => ({

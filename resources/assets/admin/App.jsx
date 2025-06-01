@@ -22,7 +22,6 @@ export default function App() {
                     element={token ? <Navigate to="/admin/dashboard"/> : <SignIn/>}
                 />
 
-                {/* Защищенные маршруты */}
                 <Route path="/admin" element={<AppLayout/>}>
                     {token && tfa ? (
                         <Route path="login/tfa" element={<LoginFormTfa/>}/>
@@ -33,7 +32,6 @@ export default function App() {
                     ) : null}
                 </Route>
 
-                {/* Общий fallback для всех маршрутов */}
                 <Route
                     path="*"
                     element={

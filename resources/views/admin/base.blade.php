@@ -11,7 +11,7 @@
 
     <!-- Fonts -->
     @yield('fonts')
-    @vite('resources/assets/admin/style/fonts.css')
+    @vite('resources/assets/admin/style/index.sass')
 
     <!-- Styles -->
     @yield('style')

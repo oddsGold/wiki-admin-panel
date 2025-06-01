@@ -12,17 +12,15 @@ import {AppWrapper} from "./components/common/PageMeta.jsx";
 import {ThemeProvider} from "./context/ThemeContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-    <StrictMode>
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <BrowserRouter>
-                    <ThemeProvider>
-                        <AppWrapper>
-                            <App/>
-                        </AppWrapper>
-                    </ThemeProvider>
-                </BrowserRouter>
-            </PersistGate>
-        </Provider>
-    </StrictMode>,
+    <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+            <BrowserRouter>
+                <ThemeProvider>
+                    <AppWrapper>
+                        <App/>
+                    </AppWrapper>
+                </ThemeProvider>
+            </BrowserRouter>
+        </PersistGate>
+    </Provider>
 );

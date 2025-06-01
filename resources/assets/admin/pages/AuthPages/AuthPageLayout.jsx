@@ -1,6 +1,6 @@
 import React from "react";
 import GridShape from "../../components/common/GridShape.jsx";
-import authLogo from "../../../images/logo/auth-logo.svg";
+import authLogo from "../../../images/logo/auth-logo-new.svg";
 import ThemeTogglerTwo from "../../components/common/ThemeTogglerTwo.jsx";
 
 export default function AuthLayout({ children }) {
@@ -13,10 +13,10 @@ export default function AuthLayout({ children }) {
                         {/* ===== Common Grid Shape Start ===== */}
                         <GridShape />
                         <div className="flex flex-col items-center max-w-xs">
-                            <div className="block mb-4">
+                            <div className="block mb-3">
                                 <img
-                                    width={231}
-                                    height={48}
+                                    width={250}
+                                    height={50}
                                     src={authLogo}
                                     alt="Logo"
                                 />

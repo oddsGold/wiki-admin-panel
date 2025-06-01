@@ -11,7 +11,7 @@ export const downloadApiSlice = api.injectEndpoints({
                 };
             },
             providesTags: ['images'],
-            transformResponse: (response, meta, arg) => response.data,
+            transformResponse: (response) => response,
         }),
         [ENDPOINTS.UPLOAD]: builder.mutation({
             query: (formData) => {
