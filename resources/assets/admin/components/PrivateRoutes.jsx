@@ -7,6 +7,8 @@ import UserPage from "../pages/UserPage/UserPage.jsx";
 import CreateUserPage from "../pages/UserPage/CreateUserPage.jsx";
 import EditUserPage from "../pages/UserPage/EditUserPage.jsx";
 import ImagePage from "../pages/DownloadPage/ImagePage.jsx";
+import FaqPage from "../pages/FaqPage/FaqPage.jsx";
+import CreateFaqPage from "../pages/FaqPage/CreateFaqPage.jsx";
 
 const PrivateRoutes = () => {
     return (
@@ -27,9 +29,9 @@ const PrivateRoutes = () => {
             {/*<Route path="/news/:id/edit" element={<EditBlogPage/>}/>*/}
             {/*<Route path="/news/create" element={<CreateBlogPage/>}/>*/}
 
-            {/*<Route path="/faqs" exact element={<FaqPage/>}/>*/}
+            <Route path="/admin/faqs" exact element={<FaqPage/>}/>
             {/*<Route path="/faqs/:id/edit" element={<EditFaqPage/>}/>*/}
-            {/*<Route path="/faqs/create" element={<CreateFaqPage/>}/>*/}
+            <Route path="/admin/faqs/create" element={<CreateFaqPage/>}/>
 
             <Route path="/admin/images" exact element={<ImagePage/>}/>
             {/*<Route path="/admin/files" exact element={<FilePage/>}/>*/}

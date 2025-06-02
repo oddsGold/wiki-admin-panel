@@ -52,7 +52,13 @@ export default function EditUserPage() {
                         title="Edit user"
                         description="Edit user"
                     />
-                    <PageBreadcrumb pageTitle="Edit user page"/>
+                    <PageBreadcrumb
+                        breadcrumbs={[
+                            { title: "Home", to: "/admin/dashboard" },
+                            { title: "Users", to: "/admin/users"},
+                            { title: "Edit user page"},
+                        ]}
+                    />
 
                     {isLoading ? (
                         <div

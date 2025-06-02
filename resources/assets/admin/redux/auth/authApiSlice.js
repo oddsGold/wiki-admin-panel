@@ -42,7 +42,7 @@ export const authApiSlice = api.injectEndpoints({
             query: ({code}) => ({
                 url: '/auth/tfa',
                 method: 'POST',
-                body: {code},
+                body: {code: code.toString()},
             }),
             invalidatesTags: ['account']
         }),

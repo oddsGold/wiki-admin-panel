@@ -38,34 +38,51 @@ const baseQuery = fetchBaseQuery({
     }
 });
 
+let isRefreshing = false;
+let pendingRequests = [];
+
 const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
 
     if (result?.error?.status === 401) {
-        try {
-            const refreshResult = await baseQuery({
-                url: '/auth/refresh-tokens',
-                method: 'POST',
-                body: {},
-                headers: {
-                    Accept: 'application/json'
+        if (!isRefreshing) {
+            isRefreshing = true;
+
+            try {
+                const refreshResult = await baseQuery({
+                    url: '/auth/refresh-tokens',
+                    method: 'POST',
+                    body: {},
+                    headers: {
+                        Accept: 'application/json'
+                    }
+                }, api, extraOptions);
+
+                if (refreshResult.data) {
+                    api.dispatch(setToken(refreshResult.data['access-token']));
+
+                    pendingRequests.forEach(cb => cb());
+                    pendingRequests = [];
+
+                    result = await baseQuery(args, api, extraOptions);
+                } else {
+                    api.dispatch(logOutFromTFA());
                 }
-            }, api, extraOptions);
-
-            if (refreshResult.data) {
-                api.dispatch(setToken(refreshResult.data['access-token']));
-
-                result = await baseQuery(args, api, extraOptions);
-            } else {
+            } catch (error) {
                 api.dispatch(logOutFromTFA());
+            } finally {
+                isRefreshing = false;
             }
-        } catch (error) {
-            api.dispatch(logOutFromTFA());
+        } else {
+            await new Promise(resolve => {
+                pendingRequests.push(resolve);
+            });
+            result = await baseQuery(args, api, extraOptions);
         }
     }
-
     return result;
 };
+
 
 
 export const api = createApi({

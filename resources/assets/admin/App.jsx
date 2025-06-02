@@ -7,6 +7,7 @@ import {ScrollToTop} from "./components/common/ScrollToTop.jsx";
 import AppLayout from "./layout/AppLayout.jsx";
 import SignIn from "./pages/AuthPages/SignIn.jsx";
 import PrivateRoutes from "./components/PrivateRoutes.jsx";
+import SignInTfa from "./pages/AuthPages/SignInTfa.jsx";
 
 export default function App() {
     const tfa = useSelector(selectTFA);
@@ -21,12 +22,11 @@ export default function App() {
                     path="/admin/login"
                     element={token ? <Navigate to="/admin/dashboard"/> : <SignIn/>}
                 />
+                {token && tfa ? (
+                    <Route path="/admin/login/tfa" element={<SignInTfa />}/>
+                ) : null}
 
                 <Route path="/admin" element={<AppLayout/>}>
-                    {token && tfa ? (
-                        <Route path="login/tfa" element={<LoginFormTfa/>}/>
-                    ) : null}
-
                     {token && !tfa ? (
                         <Route path="*" element={<PrivateRoutes />} />
                     ) : null}

@@ -1,8 +1,8 @@
 import PageMeta from "../../components/common/PageMeta.jsx";
 import AuthLayout from "./AuthPageLayout.jsx";
-import SignInForm from "../../components/auth/SignInForm.jsx";
+import SignInFormTfa from "../../components/auth/SignInFormTfa.jsx";
 
-export default function SignIn() {
+export default function SignInTfa() {
   return (
     <>
       <PageMeta
@@ -10,7 +10,7 @@ export default function SignIn() {
         description="SignIn Form"
       />
       <AuthLayout>
-        <SignInForm />
+        <SignInFormTfa />
       </AuthLayout>
     </>
   );

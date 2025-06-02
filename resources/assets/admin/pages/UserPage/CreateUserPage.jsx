@@ -31,7 +31,13 @@ export default function CreateUserPage() {
                 title="Create new user"
                 description="Create user user"
             />
-            <PageBreadcrumb pageTitle="Create user user"/>
+            <PageBreadcrumb
+                breadcrumbs={[
+                    { title: "Home", to: "/admin/dashboard" },
+                    { title: "Users", to: "/admin/users"},
+                    { title: "Create new user"},
+                ]}
+            />
             <div className="space-y-6">
                 <ComponentCard title="Create user">
                     <UserForm

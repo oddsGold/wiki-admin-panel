@@ -5,8 +5,8 @@ import {
     HorizontaLDots,
 } from "../icons";
 import {useSidebar} from "../context/SidebarContext.jsx";
-import LogoLight from "../../images/logo/logo.svg";
-import LogoDark from "../../images/logo/logo-dark.svg";
+import LogoLight from "../../images/logo/logo-new.svg";
+import LogoDark from "../../images/logo/logo-dark-new.svg";
 import LogoIcon from "../../images/logo/logo-icon.svg";
 import {useGetMenuItemsQuery} from "../redux/auth/authApiSlice.js";
 import {convertMenu} from "../components/utils/convertMenu.js";
@@ -196,11 +196,15 @@ const AppSidebar = () => {
                         <>
                             <img
                                 src={LogoLight}
+                                width={154}
+                                height={32}
                                 className="dark:hidden"
                                 alt="Logo"
                             />
                             <img
                                 src={LogoDark}
+                                width={154}
+                                height={32}
                                 className="hidden dark:block"
                                 alt="Logo"
                             />

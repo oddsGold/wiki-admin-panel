@@ -10,7 +10,7 @@ export const faqApiSlice = api.injectEndpoints({
                 };
             },
             providesTags: ['faqs'],
-            transformResponse: (response, meta, arg) => response.data,
+            transformResponse: (response) => response,
         }),
         deleteFaq: builder.mutation({
             query: (id) => ({

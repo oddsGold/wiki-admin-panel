@@ -1,39 +1,39 @@
 import PageBreadcrumb from "../../components/common/PageBreadCrumb.jsx";
 import PageMeta from "../../components/common/PageMeta.jsx";
-import {useDeleteUserMutation, useUsersQuery} from "../../redux/users/usersApiSlice.js";
 import CrudPage from "../../components/shared/CrudPage.jsx";
 import ComponentCard from "../../components/common/ComponentCard.jsx";
+import {useDeleteFaqMutation, useFaqQuery} from "../../redux/faq/faqApiSlice.js";
 
-export default function userPage() {
+export default function FaqPage() {
     const gridHeaderRow = [
         {name: 'id', label: '#', sortable: true},
-        {name: 'login', label: 'Ім\'я користувача'},
-        {name: 'last_login_at', label: 'Дата останнього входу'},
+        {name: 'title', label: 'Назва', sortable: true},
+        {name: 'user', label: 'Автор'},
         {name: 'created_at', label: 'Дата створення'},
-        {name: 'role.label', label: 'Роль', badge: true}
+        {name: 'updated_at', label: 'Дата модифікації'}
     ];
 
     return (
         <>
             <PageMeta
-                title="User page"
-                description="User page"
+                title="FAQ page"
+                description="FAQ page"
             />
             <PageBreadcrumb
                 breadcrumbs={[
                     { title: "Home", to: "/admin/dashboard" },
-                    { title: "Users" },
+                    { title: "FAQ" },
                 ]}
             />
             <div className="space-y-6">
-                <ComponentCard title="Users">
+                <ComponentCard title="FAQ">
                     <CrudPage
-                        buttonTitle="Users"
-                        createPath="/admin/users/create"
-                        editPath="/admin/users"
+                        buttonTitle="FAQ"
+                        createPath="/admin/faqs/create"
+                        editPath="/admin/faqs"
                         gridHeaderRow={gridHeaderRow}
-                        useQuery={useUsersQuery}
-                        useDeleteMutation={useDeleteUserMutation}
+                        useQuery={useFaqQuery}
+                        useDeleteMutation={useDeleteFaqMutation}
                     />
                 </ComponentCard>
             </div>
