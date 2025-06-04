@@ -74,7 +74,7 @@ export default function FileDropzone({accept, handleSubmit, required = false}) {
     return (
         <>
             <div className={styles}>
-                <form
+                <div
                     {...getRootProps()}
                     className={`dropzone rounded-xl   border-dashed border-gray-300 p-7 lg:p-10
                             ${isDragActive
@@ -107,7 +107,6 @@ export default function FileDropzone({accept, handleSubmit, required = false}) {
                             </div>
                         </div>
 
-                        {/* Text Content */}
                         <h4 className="mb-3 font-semibold text-gray-800 text-theme-xl dark:text-white/90">
                             {isDragActive ? "Drop Files Here" : "Drag & Drop Files Here"}
                         </h4>
@@ -121,7 +120,7 @@ export default function FileDropzone({accept, handleSubmit, required = false}) {
               Browse File
             </span>
                     </div>
-                </form>
+                </div>
             </div>
 
             {errorMessages.length > 0 && (

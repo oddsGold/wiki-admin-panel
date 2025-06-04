@@ -1,16 +1,16 @@
 import PageBreadcrumb from "../../components/common/PageBreadCrumb.jsx";
 import PageMeta from "../../components/common/PageMeta.jsx";
-import {useDeleteUserMutation, useUsersQuery} from "../../redux/users/usersApiSlice.js";
 import CrudPage from "../../components/shared/CrudPage.jsx";
 import ComponentCard from "../../components/common/ComponentCard.jsx";
+import {useDeleteVideoMutation, useVideoQuery} from "../../redux/video/videoApiSlice.js";
 
-export default function userPage() {
+export default function VideoPage() {
     const gridHeaderRow = [
-        {name: 'id', label: '#'},
-        {name: 'login', label: 'Ім\'я користувача'},
-        {name: 'last_login_at', label: 'Дата останнього входу'},
+        {name: 'id', label: '#', sortable: true},
+        {name: 'title', label: 'Назва', sortable: true},
+        {name: 'user', label: 'Автор'},
         {name: 'created_at', label: 'Дата створення'},
-        {name: 'role.label', label: 'Роль', badge: true}
+        {name: 'updated_at', label: 'Дата модифікації'}
     ];
 
     return (
@@ -22,18 +22,19 @@ export default function userPage() {
             <PageBreadcrumb
                 breadcrumbs={[
                     { title: "Home", to: "/admin/dashboard" },
-                    { title: "Users" },
+                    { title: "Videos" },
                 ]}
             />
             <div className="space-y-6">
-                <ComponentCard title="Users">
+                <ComponentCard title="Videos">
                     <CrudPage
-                        buttonTitle="Users"
-                        createPath="/admin/users/create"
-                        editPath="/admin/users"
+                        buttonTitle="Video"
+                        createPath="/admin/videos/create"
+                        editPath="/admin/videos"
                         gridHeaderRow={gridHeaderRow}
-                        useQuery={useUsersQuery}
-                        useDeleteMutation={useDeleteUserMutation}
+                        useQuery={useVideoQuery}
+                        useDeleteMutation={useDeleteVideoMutation}
+                        isFilter={true}
                     />
                 </ComponentCard>
             </div>

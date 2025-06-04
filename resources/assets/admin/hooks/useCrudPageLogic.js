@@ -1,19 +1,42 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import {errorHandler} from "../components/utils/toastHandler.js";
 
-export function useCrudPageLogic({ useQuery, useDeleteMutation }) {
+export function useCrudPageLogic({ useQuery, useDeleteMutation, initialLimit  = 30 }) {
     const [size, setSize] = useState(30);
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(30);
+    const [limit, setLimit] = useState(initialLimit);
     const [sort, setSort] = useState('-id');
     const [openDialog, setOpenDialog] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+
+    const [items, setItems] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
 
     const { data: response, isLoading } = useQuery({ page, limit, sort });
     const [deleteItem] = useDeleteMutation();
 
     const data = response?.data || [];
     const meta = response?.meta || {};
+
+    useEffect(() => {
+        if (data?.length > 0) {
+            setItems(prev => [...prev, ...response.data]);
+        }
+
+        if (meta?.total && items.length + (data?.length || 0) >= meta.total) {
+            setHasMore(false);
+        }
+
+        setIsFetchingMore(false);
+    }, [response]);
+
+    const loadMore = () => {
+        if (hasMore && !isLoading) {
+            setIsFetchingMore(true);
+            setPage(prev => prev + 1);
+        }
+    };
 
     const handleChange = (event) => {
         setLimit(event.target.value);
@@ -59,6 +82,10 @@ export function useCrudPageLogic({ useQuery, useDeleteMutation }) {
         setSort,
         setPage,
         setLimit,
-        meta
+        meta,
+        items,
+        loadMore,
+        hasMore,
+        isFetchingMore
     };
 }

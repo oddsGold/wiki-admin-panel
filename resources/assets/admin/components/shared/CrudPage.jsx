@@ -10,7 +10,8 @@ export default function CrudPage({
                                      editPath,
                                      gridHeaderRow = [],
                                      useQuery,
-                                     useDeleteMutation
+                                     useDeleteMutation,
+                                     isFilter = false,
                                  }) {
 
     const {
@@ -63,6 +64,7 @@ export default function CrudPage({
                         handleChange={handleChange}
                         search={true}
                         meta={meta}
+                        isFilter={isFilter}
                     />
 
                     <DeleteConfirmDialog

@@ -15,6 +15,16 @@ import SearchInput from "../../generics/SeatchInput.jsx";
 import PagePagination from "../../generics/PagePagination.jsx";
 import PaginationInfo from "../../generics/PaginationInfo.jsx";
 import {handleSort} from "../../utils/handleSort.js";
+import Filter from "../../form/filter.jsx";
+import {Field, Form, Formik} from "formik";
+import {Loading} from "../../loadingBar/Loading.jsx";
+import Label from "../../form/Label.jsx";
+import FormikInput from "../../form/input/FormikInput.jsx";
+import Button from "../../ui/button/Button.jsx";
+import {Modal} from "../../ui/modal/index.jsx";
+import {useModal} from "../../../hooks/useModal.js";
+import * as Yup from "yup";
+import {acceptHandler, errorHandler} from "../../utils/toastHandler.js";
 
 const getNestedValue = (obj, path) => {
     return path.split('.').reduce((acc, key) => acc?.[key], obj);
@@ -34,10 +44,28 @@ export default function BasicTable({
                                        size,
                                        handleChange,
                                        search,
-                                       meta
+                                       meta,
+                                       isFilter
                                    }) {
 
     const location = useLocation();
+
+    const {isOpen, openModal, closeModal} = useModal();
+    const emailValidationSchema = Yup.object().shape({
+        email: Yup.string().email("Некорректный email").required("Це поле обов'язкове"),
+    });
+    const handleSave = async (values, {setSubmitting}) => {
+        try{
+            await updateEmail({data: values}).unwrap();
+            setSubmitting(false);
+            closeModal();
+            acceptHandler("Email успішно змінено")
+        }catch (error) {
+            errorHandler(error);
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
 
     return (
@@ -57,7 +85,15 @@ export default function BasicTable({
                     <div
                         className="flex flex-col gap-2 px-4 py-4 border border-b-0 border-gray-100 dark:border-white/[0.05] rounded-t-xl sm:flex-row sm:items-center sm:justify-between">
                         <PaginationSelector size={size} handleChange={handleChange}/>
-                        {search && <SearchInput/>}
+
+                        <div>
+                            {isFilter && (
+                                <div className="flex gap-2">
+                                    <Filter openModal={openModal}/>
+                                    {search && <SearchInput/>}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <Table>
@@ -165,6 +201,65 @@ export default function BasicTable({
                     </div>
                 </div>
             </div>
+
+            <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
+                <div
+                    className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+                    <div className="px-2 pr-14">
+                        <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+                            Редагувати особисту інформацію
+                        </h4>
+                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
+                            Оновіть свої дані, щоб ваш профіль був актуальним.
+                        </p>
+                    </div>
+                    <Formik
+                        initialValues={{email: ""}}
+                        validationSchema={emailValidationSchema}
+                        onSubmit={handleSave}
+                    >
+                        {({errors, touched, isSubmitting}) => (
+                            <Form className="flex flex-col">
+                                {/*{isUpdateEmailLoading && (*/}
+                                {/*    <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-gray-900/60 rounded-3xl">*/}
+                                {/*        <Loading />*/}
+                                {/*    </div>*/}
+                                {/*)}*/}
+                                <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
+                                    <div className="mt-7">
+                                        <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
+                                            Personal Information
+                                        </h5>
+
+                                        {/*<div className="grid grid-cols-1 gap-x-6 gap-y-5">*/}
+                                        {/*    <div className="col-span-2 lg:col-span-1">*/}
+                                        {/*        <Label>Email Address</Label>*/}
+                                        {/*        <Field*/}
+                                        {/*            id="email"*/}
+                                        {/*            placeholder="Enter email"*/}
+                                        {/*            name="email"*/}
+                                        {/*            autoFocus*/}
+                                        {/*            component={FormikInput}*/}
+                                        {/*            error={touched.email && !!errors.email}*/}
+                                        {/*            helperText={touched.email && errors.email}*/}
+                                        {/*        />*/}
+                                        {/*    </div>*/}
+                                        {/*</div>*/}
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
+                                    <Button size="sm" variant="outline" onClick={closeModal}>
+                                        Close
+                                    </Button>
+                                    <Button size="sm" onClick={handleSave}>
+                                        Save Changes
+                                    </Button>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
+                </div>
+            </Modal>
         </>
     );
 }

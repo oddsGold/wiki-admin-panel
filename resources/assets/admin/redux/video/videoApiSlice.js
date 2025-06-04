@@ -10,7 +10,7 @@ export const videoApiSlice = api.injectEndpoints({
                 };
             },
             providesTags: ['videos'],
-            transformResponse: (response, meta, arg) => response.data,
+            transformResponse: (response) => response,
         }),
         deleteVideo: builder.mutation({
             query: (id) => ({
@@ -26,7 +26,7 @@ export const videoApiSlice = api.injectEndpoints({
                 body: data
             }),
             invalidatesTags: ['videos'],
-            transformResponse: (response, meta, arg) => response.data,
+            transformResponse: (response) => response,
         }),
         currentVideo: builder.query({
             query: (id) => ({

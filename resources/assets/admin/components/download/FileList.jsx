@@ -1,14 +1,16 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 
-export default function FileList({ data, handleDelete }) {
+export default function FileList({data, handleDelete = null, ...rest}) {
+    const { setFileData, removeFileData } = rest;
+
     return (
         <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
             <div className="space-y-6">
                 <div className="grid grid-cols-1 gap-5">
 
-                    {data.map((item) => (
-                        <div>
+                    {data.map((item, index) => (
+                        <div key={index}>
                             <div
                                 className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6 flex items-start gap-6">
                                 <div className="flex w-full items-stretch gap-6">
@@ -41,12 +43,26 @@ export default function FileList({ data, handleDelete }) {
                                         >
                                             View
                                         </Link>
-                                        <div
+                                        {(setFileData || removeFileData) && (
+                                            <div
+                                                onClick={() =>
+                                                    setFileData ? setFileData(item) : removeFileData(null)
+                                                }
+                                                className={`inline-flex cursor-pointer items-center justify-center px-4 py-3 text-sm font-medium text-white rounded-lg shadow-theme-xs ${
+                                                    setFileData
+                                                        ? 'bg-green-600 hover:bg-green-500'
+                                                        : 'bg-red-600 hover:bg-red-500'
+                                                }`}
+                                            >
+                                                {setFileData ? 'Select' : 'Remove'}
+                                            </div>
+                                        )}
+                                        {handleDelete && (<div
                                             onClick={() => handleDelete(item)}
                                             className="inline-flex cursor-pointer items-center justify-center px-4 py-3 text-sm font-medium text-white rounded-lg bg-red-600 shadow-theme-xs hover:bg-red-500"
                                         >
-                                            Delete
-                                        </div>
+                                        Delete
+                                        </div>)}
                                     </div>
                                 </div>
                             </div>

@@ -9,6 +9,9 @@ import EditUserPage from "../pages/UserPage/EditUserPage.jsx";
 import ImagePage from "../pages/DownloadPage/ImagePage.jsx";
 import FaqPage from "../pages/FaqPage/FaqPage.jsx";
 import CreateFaqPage from "../pages/FaqPage/CreateFaqPage.jsx";
+import EditFaqPage from "../pages/FaqPage/EditFaqPage.jsx";
+import VideoPage from "../pages/VideoPage/VideoPage.jsx";
+import CreateVideoPage from "../pages/VideoPage/CreateVideoPage.jsx";
 
 const PrivateRoutes = () => {
     return (
@@ -30,7 +33,7 @@ const PrivateRoutes = () => {
             {/*<Route path="/news/create" element={<CreateBlogPage/>}/>*/}
 
             <Route path="/admin/faqs" exact element={<FaqPage/>}/>
-            {/*<Route path="/faqs/:id/edit" element={<EditFaqPage/>}/>*/}
+            <Route path="/admin/faqs/:id/edit" element={<EditFaqPage/>}/>
             <Route path="/admin/faqs/create" element={<CreateFaqPage/>}/>
 
             <Route path="/admin/images" exact element={<ImagePage/>}/>
@@ -44,9 +47,9 @@ const PrivateRoutes = () => {
             {/*<Route path="/users/memos/:id/edit" element={<EditMemoPage/>}/>*/}
             {/*<Route path="/users/memos/create" element={<CreateMemoPage/>}/>*/}
 
-            {/*<Route path="/videos" exact element={<VideoPage/>}/>*/}
+            <Route path="/admin/videos" exact element={<VideoPage/>}/>
             {/*<Route path="/videos/:id/edit" element={<EditVideoPage/>}/>*/}
-            {/*<Route path="/videos/create" element={<CreateVideoPage/>}/>*/}
+            <Route path="/admin/videos/create" element={<CreateVideoPage/>}/>
 
             <Route path="/admin/404" element={<NotFound />}/>
             <Route path="*" element={<Navigate to="/admin/404"/>}/>

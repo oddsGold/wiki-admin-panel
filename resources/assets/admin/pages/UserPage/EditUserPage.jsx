@@ -13,13 +13,13 @@ import UserForm from "../../components/form/page-forms/UserForm.jsx";
 import {Loading} from "../../components/loadingBar/Loading.jsx";
 
 export default function EditUserPage() {
-    const { id } = useParams();
+    const {id} = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const previousPath = useRef(location.state?.from?.pathname ?? '/admin/users');
 
-    const { data: current, error, isLoading: isCurrentUserLoading } = useCurrentUserQuery(id);
-    const { data: roles, error: isRolesError, isLoading: isRolesLoading } = useRolesQuery(1,30);
+    const {data: current, error, isLoading: isCurrentUserLoading} = useCurrentUserQuery(id);
+    const {data: roles, error: isRolesError, isLoading: isRolesLoading} = useRolesQuery(1, 30);
     const [updateUser, {isLoading: isUpdateUserLoading}] = useUpdateUserMutation();
 
     const isLoading = isCurrentUserLoading || isRolesLoading;
@@ -36,6 +36,7 @@ export default function EditUserPage() {
                 role: parseInt(values.role)
             };
             await updateUser({data: updatedValues}).unwrap();
+            acceptHandler("Запис успішно відредаговано");
             navigate('/admin/users');
         } catch (err) {
             errorHandler(err.data.message);
@@ -44,8 +45,11 @@ export default function EditUserPage() {
 
     return (
         <>
-            {isEmptyData ? (
-                <div className="text-lg font-medium text-gray-800 dark:text-white/90">Data not found</div>
+            {isLoading ? (
+                <div
+                    className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-gray-900/60 rounded-3xl">
+                    <Loading/>
+                </div>
             ) : (
                 <>
                     <PageMeta
@@ -54,17 +58,14 @@ export default function EditUserPage() {
                     />
                     <PageBreadcrumb
                         breadcrumbs={[
-                            { title: "Home", to: "/admin/dashboard" },
-                            { title: "Users", to: "/admin/users"},
-                            { title: "Edit user page"},
+                            {title: "Home", to: "/admin/dashboard"},
+                            {title: "Users", to: "/admin/users"},
+                            {title: "Edit user page"},
                         ]}
                     />
 
-                    {isLoading ? (
-                        <div
-                            className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-gray-900/60 rounded-3xl">
-                            <Loading/>
-                        </div>
+                    {isEmptyData ? (
+                        <div className="text-lg font-medium text-gray-800 dark:text-white/90">Data not found</div>
                     ) : (
                         <div className="space-y-6">
                             <ComponentCard title="Edit user">
