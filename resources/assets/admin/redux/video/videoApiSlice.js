@@ -3,8 +3,13 @@ import { api } from "../operations.js";
 export const videoApiSlice = api.injectEndpoints({
     endpoints: builder => ({
         video: builder.query({
-            query: ({ page = 1, limit = 30, sort = '-id' }) => {
+            query: ({ page = 1, limit = 30, sort = '-id', status = [] }) => {
                 const params = new URLSearchParams({ page, limit, sort });
+
+                if (status.length > 0) {
+                    params.set('status', JSON.stringify(status));
+                }
+
                 return {
                     url: `/videos?${params.toString()}`,
                 };

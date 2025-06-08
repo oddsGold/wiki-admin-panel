@@ -1,6 +1,7 @@
 import {configureStore} from "@reduxjs/toolkit";
 import authReducer from "./auth/slice.js";
 import userReducer from "./users/slice.js";
+import roleReducer from "./roles/slice.js";
 import newsReducer from "./blog/slice.js";
 import faqReducer from "./faq/slice.js";
 import downloadReducer from "./download/slice.js";
@@ -31,6 +32,7 @@ export const store = configureStore({
         [api.reducerPath]: api.reducer,
         auth: persistReducer(authPersistConfig, authReducer),
         user: userReducer,
+        role: roleReducer,
         news: newsReducer,
         faq: faqReducer,
         download: downloadReducer,

@@ -4,13 +4,14 @@ import ComponentCard from "../../components/common/ComponentCard.jsx";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {
     useCurrentUserQuery,
-    useRolesQuery,
     useUpdateUserMutation
 } from "../../redux/users/usersApiSlice.js";
 import {acceptHandler, errorHandler} from "../../components/utils/toastHandler.js";
 import React, {useRef} from "react";
 import UserForm from "../../components/form/page-forms/UserForm.jsx";
 import {Loading} from "../../components/loadingBar/Loading.jsx";
+import {useRolesQuery} from "../../redux/roles/rolesApiSlice.js";
+import {useCrudPageLogic} from "../../hooks/useCrudPageLogic.js";
 
 export default function EditUserPage() {
     const {id} = useParams();
@@ -19,14 +20,17 @@ export default function EditUserPage() {
     const previousPath = useRef(location.state?.from?.pathname ?? '/admin/users');
 
     const {data: current, error, isLoading: isCurrentUserLoading} = useCurrentUserQuery(id);
-    const {data: roles, error: isRolesError, isLoading: isRolesLoading} = useRolesQuery(1, 30);
+    const {
+        isLoading: isRolesLoading,
+        data,
+    } = useCrudPageLogic({useQuery: useRolesQuery});
     const [updateUser, {isLoading: isUpdateUserLoading}] = useUpdateUserMutation();
 
     const isLoading = isCurrentUserLoading || isRolesLoading;
 
     const isEmptyData =
         (!current || (typeof current === 'object' && Object.keys(current).length === 0)) ||
-        (!roles || (Array.isArray(roles) && roles.length === 0));
+        (!data || (Array.isArray(data) && data.length === 0));
 
 
     const handleSubmit = async (values) => {
@@ -77,7 +81,7 @@ export default function EditUserPage() {
                                         role: current.role.id
                                     } : null}
                                     handleSubmit={handleSubmit}
-                                    roles={roles}
+                                    roles={data}
                                     backLinkPath={previousPath}
                                 />
                             </ComponentCard>

@@ -12,6 +12,9 @@ import CreateFaqPage from "../pages/FaqPage/CreateFaqPage.jsx";
 import EditFaqPage from "../pages/FaqPage/EditFaqPage.jsx";
 import VideoPage from "../pages/VideoPage/VideoPage.jsx";
 import CreateVideoPage from "../pages/VideoPage/CreateVideoPage.jsx";
+import EditVideoPage from "../pages/VideoPage/EditVideoPage.jsx";
+import RolePage from "../pages/RolePage/RolePage.jsx";
+import CreateRolePage from "../pages/RolePage/CreateRolePage.jsx";
 
 const PrivateRoutes = () => {
     return (
@@ -24,9 +27,9 @@ const PrivateRoutes = () => {
             <Route path="/admin/users/:id/edit" element={<EditUserPage/>}/>
             <Route path="/admin/users/create" element={<CreateUserPage />}/>
 
-            {/*<Route path="/roles" exact element={<RolePage/>}/>*/}
+            <Route path="/admin/roles" exact element={<RolePage/>}/>
             {/*<Route path="/roles/:id/edit" element={<EditRolePage/>}/>*/}
-            {/*<Route path="/roles/create" element={<CreateRolePage/>}/>*/}
+            <Route path="/admin/roles/create" element={<CreateRolePage/>}/>
 
             {/*<Route path="/news" exact element={<BlogPage/>}/>*/}
             {/*<Route path="/news/:id/edit" element={<EditBlogPage/>}/>*/}
@@ -48,7 +51,7 @@ const PrivateRoutes = () => {
             {/*<Route path="/users/memos/create" element={<CreateMemoPage/>}/>*/}
 
             <Route path="/admin/videos" exact element={<VideoPage/>}/>
-            {/*<Route path="/videos/:id/edit" element={<EditVideoPage/>}/>*/}
+            <Route path="/admin/videos/:id/edit" element={<EditVideoPage/>}/>
             <Route path="/admin/videos/create" element={<CreateVideoPage/>}/>
 
             <Route path="/admin/404" element={<NotFound />}/>

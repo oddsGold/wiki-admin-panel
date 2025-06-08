@@ -12,6 +12,7 @@ export default function CrudPage({
                                      useQuery,
                                      useDeleteMutation,
                                      isFilter = false,
+                                     isSearch = false,
                                  }) {
 
     const {
@@ -28,7 +29,8 @@ export default function CrudPage({
         setSort,
         page,
         setPage,
-        meta
+        meta,
+        setFilters,
     } = useCrudPageLogic({useQuery, useDeleteMutation});
 
     if (isLoading) {
@@ -62,9 +64,11 @@ export default function CrudPage({
                         page={page}
                         size={size}
                         handleChange={handleChange}
-                        search={true}
+                        search={isSearch}
                         meta={meta}
                         isFilter={isFilter}
+                        setFilters={setFilters}
+                        isLoading={isLoading}
                     />
 
                     <DeleteConfirmDialog

@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {errorHandler} from "../components/utils/toastHandler.js";
 
-export function useCrudPageLogic({ useQuery, useDeleteMutation, initialLimit  = 30 }) {
+export function useCrudPageLogic({ useQuery, useDeleteMutation = null, initialLimit  = 30 }) {
     const [size, setSize] = useState(30);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(initialLimit);
@@ -13,18 +13,28 @@ export function useCrudPageLogic({ useQuery, useDeleteMutation, initialLimit  = 
     const [hasMore, setHasMore] = useState(true);
     const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-    const { data: response, isLoading } = useQuery({ page, limit, sort });
-    const [deleteItem] = useDeleteMutation();
+    const [filters, setFilters] = useState(null);
+    const queryParams = {
+        page,
+        limit,
+        sort,
+        ...(filters || {})
+    };
+
+    const { data: response, isLoading } = useQuery(queryParams);
+    const [deleteItem] = useDeleteMutation ? useDeleteMutation() : [() => {}];
 
     const data = response?.data || [];
     const meta = response?.meta || {};
 
     useEffect(() => {
-        if (data?.length > 0) {
-            setItems(prev => [...prev, ...response.data]);
+        if (page === 1) {
+            setItems(response?.data || []);
+        } else if (data?.length > 0) {
+            setItems(prev => [...prev, ...data]);
         }
 
-        if (meta?.total && items.length + (data?.length || 0) >= meta.total) {
+        if (meta?.total && (items.length + data.length) >= meta.total) {
             setHasMore(false);
         }
 
@@ -86,6 +96,7 @@ export function useCrudPageLogic({ useQuery, useDeleteMutation, initialLimit  = 
         items,
         loadMore,
         hasMore,
-        isFetchingMore
+        isFetchingMore,
+        setFilters
     };
 }

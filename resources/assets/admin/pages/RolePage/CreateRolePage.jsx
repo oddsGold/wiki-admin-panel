@@ -4,22 +4,22 @@ import ComponentCard from "../../components/common/ComponentCard.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import {acceptHandler, errorHandler} from "../../components/utils/toastHandler.js";
 import {useRef} from "react";
-import FaqForm from "../../components/form/page-forms/FaqForm.jsx";
-import {useCreateVideoMutation} from "../../redux/video/videoApiSlice.js";
-import VideoForm from "../../components/form/page-forms/VideoForm.jsx";
+import {useCreateRoleMutation, useResourcesQuery} from "../../redux/roles/rolesApiSlice.js";
+import RoleForm from "../../components/form/page-forms/RoleForm.jsx";
 
-export default function CreateVideoPage() {
+export default function CreateRolePage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const previousPath = useRef(location.state?.from?.pathname ?? '/admin/videos');
+    const previousPath = useRef(location.state?.from?.pathname ?? '/admin/roles');
 
-    const [createVideo, {isLoading}] = useCreateVideoMutation();
+    const { data: resources, error: isResourcesError, isLoading: isResourcesLoading } = useResourcesQuery();
+    const [createRole, {isLoading}] = useCreateRoleMutation();
 
     const handleSubmit = async (values) => {
         try {
-            await createVideo({data: values}).unwrap();
-            navigate('/admin/videos');
-            acceptHandler("Video успішно доданий");
+            await createRole({data: values}).unwrap();
+            navigate('/admin/roles');
+            acceptHandler("Роль успішно додано");
         } catch (err) {
             errorHandler(err.data.message);
         }
@@ -28,24 +28,25 @@ export default function CreateVideoPage() {
     return (
         <>
             <PageMeta
-                title="Create new faq"
-                description="Create new faq"
+                title="Create new role"
+                description="Create new role"
             />
             <PageBreadcrumb
                 breadcrumbs={[
                     { title: "Home", to: "/admin/dashboard" },
-                    { title: "Video", to: "/admin/videos"},
-                    { title: "Create video"},
+                    { title: "Roles", to: "/admin/roles"},
+                    { title: "Create new role"},
                 ]}
             />
             <div className="space-y-6">
-                <ComponentCard title="Create video">
-                    <VideoForm
+                <ComponentCard title="Create user">
+                    <RoleForm
                         defaultCurrent={{
-                            title: '',
-                            url: ''
+                            label: '',
+                            resources: []
                         }}
                         handleSubmit={handleSubmit}
+                        resources={resources}
                         backLinkPath={previousPath}
                     />
                 </ComponentCard>

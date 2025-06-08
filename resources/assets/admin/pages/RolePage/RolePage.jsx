@@ -2,15 +2,14 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb.jsx";
 import PageMeta from "../../components/common/PageMeta.jsx";
 import CrudPage from "../../components/shared/CrudPage.jsx";
 import ComponentCard from "../../components/common/ComponentCard.jsx";
-import {useDeleteVideoMutation, useVideoQuery} from "../../redux/video/videoApiSlice.js";
+import {useDeleteRoleMutation, useRolesQuery} from "../../redux/roles/rolesApiSlice.js";
 
-export default function VideoPage() {
+export default function RolePage() {
     const gridHeaderRow = [
-        {name: 'id', label: '#', sortable: true},
-        {name: 'title', label: 'Назва', sortable: true},
-        {name: 'user', label: 'Автор'},
+        {name: 'id', label: '#'},
+        {name: 'label', label: 'Роль', badge: true},
         {name: 'created_at', label: 'Дата створення'},
-        {name: 'updated_at', label: 'Дата модифікації'}
+        {name: 'updated_at', label: 'Дата модифікації' }
     ];
 
     return (
@@ -22,20 +21,18 @@ export default function VideoPage() {
             <PageBreadcrumb
                 breadcrumbs={[
                     { title: "Home", to: "/admin/dashboard" },
-                    { title: "Videos" },
+                    { title: "Roles" },
                 ]}
             />
             <div className="space-y-6">
-                <ComponentCard title="Videos">
+                <ComponentCard title="Roles">
                     <CrudPage
-                        buttonTitle="Video"
-                        createPath="/admin/videos/create"
-                        editPath="/admin/videos"
+                        buttonTitle="Role"
+                        createPath="/admin/roles/create"
+                        editPath="/admin/roles"
                         gridHeaderRow={gridHeaderRow}
-                        useQuery={useVideoQuery}
-                        useDeleteMutation={useDeleteVideoMutation}
-                        isFilter={true}
-                        isSearch={true}
+                        useQuery={useRolesQuery}
+                        useDeleteMutation={useDeleteRoleMutation}
                     />
                 </ComponentCard>
             </div>

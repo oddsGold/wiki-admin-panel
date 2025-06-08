@@ -2,15 +2,20 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb.jsx";
 import PageMeta from "../../components/common/PageMeta.jsx";
 import ComponentCard from "../../components/common/ComponentCard.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import {useCreateUserMutation, useRolesQuery} from "../../redux/users/usersApiSlice.js";
+import {useCreateUserMutation} from "../../redux/users/usersApiSlice.js";
 import {acceptHandler, errorHandler} from "../../components/utils/toastHandler.js";
 import {useRef} from "react";
 import UserForm from "../../components/form/page-forms/UserForm.jsx";
+import {useRolesQuery} from "../../redux/roles/rolesApiSlice.js";
+import {useCrudPageLogic} from "../../hooks/useCrudPageLogic.js";
 
 export default function CreateUserPage() {
     const navigate = useNavigate();
     const [createUser, {isLoading}] = useCreateUserMutation();
-    const { data: roles, error: isRolesError, isLoading: isRolesLoading } = useRolesQuery(1,30);
+
+    const {
+        data,
+    } = useCrudPageLogic({useQuery: useRolesQuery});
 
     const location = useLocation();
     const previousPath = useRef(location.state?.from?.pathname ?? '/admin/users');
@@ -29,7 +34,7 @@ export default function CreateUserPage() {
         <>
             <PageMeta
                 title="Create new user"
-                description="Create user user"
+                description="Create new user"
             />
             <PageBreadcrumb
                 breadcrumbs={[
@@ -51,7 +56,7 @@ export default function CreateUserPage() {
                         }}
                         password={true}
                         handleSubmit={handleSubmit}
-                        roles={roles}
+                        roles={data}
                         backLinkPath={previousPath}
                     />
                 </ComponentCard>
