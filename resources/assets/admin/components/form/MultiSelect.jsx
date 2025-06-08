@@ -9,8 +9,9 @@ const MultiSelect = ({
                          disabled = false,
                          error = false,
                          success = false,
+                         value = []
                      }) => {
-    const [selectedOptions, setSelectedOptions] = useState(defaultSelected);
+    const [selectedOptions, setSelectedOptions] = useState(value || defaultSelected);
     const [isOpen, setIsOpen] = useState(false);
 
     const dropdownRef = useRef(null);
@@ -39,7 +40,9 @@ const MultiSelect = ({
         (value) => options.find((option) => option.value === value)?.label || ""
     );
 
-    let inputClasses = `mb-2 flex h-auto rounded-lg border py-1.5 pl-3 pr-3 shadow-theme-xs outline-hidden transition focus:border-brand-300 focus:shadow-focus-ring dark:bg-gray-900 dark:focus:border-brand-300 ${className}`;
+    const filteredOptions = options.filter(option => !selectedOptions.includes(option.value));
+
+    let inputClasses = `flex h-auto rounded-lg border py-1.5 pl-3 pr-3 shadow-theme-xs outline-hidden transition focus:border-brand-300 focus:shadow-focus-ring dark:bg-gray-900 dark:focus:border-brand-300 ${className}`;
 
     if (disabled) {
         inputClasses += ` text-gray-500 border-gray-300 opacity-40 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700 opacity-40`;
@@ -153,23 +156,27 @@ const MultiSelect = ({
                             ref={dropdownRef}
                         >
                             <div className="flex flex-col">
-                                {options.map((option, index) => (
-                                    <div
-                                        key={index}
-                                        className={`hover:bg-primary/5 w-full cursor-pointer rounded-t border-b border-gray-200 dark:border-gray-800`}
-                                        onClick={() => handleSelect(option.value)}
-                                    >
+                                {filteredOptions.length > 0 ? (
+                                    filteredOptions.map((option, index) => (
                                         <div
-                                            className={`relative flex w-full items-center p-2 pl-2 ${
-                                                selectedOptions.includes(option.value) ? "bg-primary/10" : ""
-                                            }`}
+                                            key={index}
+                                            className={`hover:bg-primary/5 w-full cursor-pointer rounded-t border-b border-gray-200 dark:border-gray-800`}
+                                            onClick={() => handleSelect(option.value)}
                                         >
-                                            <div className="mx-2 leading-6 text-gray-800 dark:text-white/90">
-                                                {option.label}
+                                            <div
+                                                className={`relative flex w-full items-center p-2 pl-2 ${
+                                                    selectedOptions.includes(option.value) ? "bg-primary/10" : ""
+                                                }`}
+                                            >
+                                                <div className="mx-2 leading-6 text-gray-800 dark:text-white/90">
+                                                    {option.label}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))
+                                ) : (
+                                    <div className="p-2 text-sm text-gray-500">Немає доступних опцій</div>
+                                )}
                             </div>
                         </div>
                     )}

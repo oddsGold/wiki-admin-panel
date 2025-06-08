@@ -15,6 +15,7 @@ import CreateVideoPage from "../pages/VideoPage/CreateVideoPage.jsx";
 import EditVideoPage from "../pages/VideoPage/EditVideoPage.jsx";
 import RolePage from "../pages/RolePage/RolePage.jsx";
 import CreateRolePage from "../pages/RolePage/CreateRolePage.jsx";
+import EditRolePage from "../pages/RolePage/EditRolePage.jsx";
 
 const PrivateRoutes = () => {
     return (
@@ -28,7 +29,7 @@ const PrivateRoutes = () => {
             <Route path="/admin/users/create" element={<CreateUserPage />}/>
 
             <Route path="/admin/roles" exact element={<RolePage/>}/>
-            {/*<Route path="/roles/:id/edit" element={<EditRolePage/>}/>*/}
+            <Route path="/admin/roles/:id/edit" element={<EditRolePage/>}/>
             <Route path="/admin/roles/create" element={<CreateRolePage/>}/>
 
             {/*<Route path="/news" exact element={<BlogPage/>}/>*/}

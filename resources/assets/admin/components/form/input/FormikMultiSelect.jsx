@@ -14,6 +14,7 @@ const FormikMultiSelect = ({ field, form, options, ...props }) => {
                 {...field}
                 {...props}
                 options={options}
+                value={field.value}
                 onChange={handleChange}
                 error={Boolean(error)}
                 helperText={error}
