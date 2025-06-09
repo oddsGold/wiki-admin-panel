@@ -38,7 +38,7 @@ export const downloadApiSlice = api.injectEndpoints({
                 };
             },
             providesTags: ['files'],
-            transformResponse: (response, meta, arg) => response.data,
+            transformResponse: (response) => response,
         }),
         [ENDPOINTS.UPLOAD_FILE]: builder.mutation({
             query: (formData) => {

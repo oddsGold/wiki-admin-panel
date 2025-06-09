@@ -65,7 +65,7 @@ export default function SignInFormTfa() {
                     </div>
 
                     {qrCode && (<div>
-                        <div><img src={qrCode} className="qr"/></div>
+                        <div className="mb-5 sm:mb-8"><img src={qrCode} className="qr mx-auto"/></div>
                     </div>)}
 
                     <div>

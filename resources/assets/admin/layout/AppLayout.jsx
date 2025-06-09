@@ -6,11 +6,16 @@ import AppSidebar from "./AppSidebar.jsx";
 import {useGetAccountQuery, useLogoutMutation} from "../redux/auth/authApiSlice.js";
 import {errorHandler} from "../components/utils/toastHandler.js";
 import {Loading} from "../components/loadingBar/Loading.jsx";
+import {toast} from "react-toastify";
+import {useEffect} from "react";
+import {NavLink} from "react-router-dom";
 
 const LayoutContent = () => {
     const {isExpanded, isHovered, isMobileOpen} = useSidebar();
     const {data: user, error: isAccountError, isLoading: isAccountLoading} = useGetAccountQuery();
     const [logout, { isLoading: logoutLoading }] = useLogoutMutation();
+
+    const TEMP_CONST = true;
 
     const handleLogout = async () => {
         try {
@@ -21,6 +26,25 @@ const LayoutContent = () => {
     };
 
     const isLoading = isAccountLoading || logoutLoading;
+
+    const acceptHandler = () => toast.warning(
+        <div>
+            <p>Для вашої безпеки, будь ласка, змініть пароль протягом 24 годин.{' '}</p>
+            <NavLink to="/admin/profile" rel="noopener noreferrer" style={{ color: '#FF6347' }}>
+                Перейдіть до зміни пароля
+            </NavLink>
+        </div>,
+        {
+            position: "bottom-left",
+            autoClose: 60000
+        }
+    );
+
+    useEffect(() => {
+        if (TEMP_CONST) {
+            acceptHandler();
+        }
+    }, [TEMP_CONST]);
 
     return (
         <div className="min-h-screen xl:flex dark:bg-gray-900">

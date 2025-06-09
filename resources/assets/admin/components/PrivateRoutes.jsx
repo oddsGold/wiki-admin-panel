@@ -16,6 +16,7 @@ import EditVideoPage from "../pages/VideoPage/EditVideoPage.jsx";
 import RolePage from "../pages/RolePage/RolePage.jsx";
 import CreateRolePage from "../pages/RolePage/CreateRolePage.jsx";
 import EditRolePage from "../pages/RolePage/EditRolePage.jsx";
+import FilePage from "../pages/DownloadPage/FilePage.jsx";
 
 const PrivateRoutes = () => {
     return (
@@ -41,7 +42,7 @@ const PrivateRoutes = () => {
             <Route path="/admin/faqs/create" element={<CreateFaqPage/>}/>
 
             <Route path="/admin/images" exact element={<ImagePage/>}/>
-            {/*<Route path="/admin/files" exact element={<FilePage/>}/>*/}
+            <Route path="/admin/files" exact element={<FilePage/>}/>
 
             {/*<Route path="/users/memos/types" exact element={<TypePage/>}/>*/}
             {/*<Route path="/users/memos/types/:id/edit" element={<EditTypePage/>}/>*/}

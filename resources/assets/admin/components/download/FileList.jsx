@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 
-export default function FileList({data, handleDelete = null, ...rest}) {
+export default function FileList({data, handleDelete = null, file = false, ...rest}) {
     const { setFileData, removeFileData } = rest;
 
     return (
@@ -15,11 +15,17 @@ export default function FileList({data, handleDelete = null, ...rest}) {
                                 className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6 flex items-start gap-6">
                                 <div className="flex w-full items-stretch gap-6">
                                     <div className="flex-shrink-0 w-32 overflow-hidden rounded-lg">
-                                        <img
-                                            alt={item.origin}
-                                            src={item.url}
-                                            className="w-full h-full object-cover rounded-lg"
-                                        />
+                                        {file ? (
+                                            <div className="w-full h-full flex justify-center items-center bg-gray-200 text-gray-500 text-2xl font-semibold rounded-lg">
+                                                {item.origin.charAt(0).toUpperCase()}
+                                            </div>
+                                        ) : (
+                                            <img
+                                                alt={item.origin}
+                                                src={item.url}
+                                                className="w-full h-full object-cover rounded-lg"
+                                            />
+                                        )}
                                     </div>
 
                                     <div className="flex-1 flex flex-col justify-center">
