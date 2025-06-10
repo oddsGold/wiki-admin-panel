@@ -19,6 +19,10 @@ export default function App() {
             <ToastContainer/>
             <Routes>
                 <Route
+                    path="/admin"
+                    element={!token ? <Navigate to="/admin/login"/> : <Navigate to="/admin/dashboard"/>}
+                />
+                <Route
                     path="/admin/login"
                     element={token ? <Navigate to="/admin/dashboard"/> : <SignIn/>}
                 />

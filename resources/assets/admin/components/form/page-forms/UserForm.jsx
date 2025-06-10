@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useImperativeHandle, useRef, useState} from "react";
 import {Form, Field, Formik} from "formik";
 import * as Yup from "yup";
 import Label from "../Label.jsx";
@@ -7,6 +7,7 @@ import FormikSelect from "../input/FormikSelect.jsx";
 import Button from "../../ui/button/Button.jsx";
 import Switch from "../switch/Switch.jsx";
 import {Link} from "react-router-dom";
+import {EyeCloseIcon, EyeIcon} from "../../../icons/index.js";
 
 export default function UserForm({
                                      current = null,
@@ -15,10 +16,24 @@ export default function UserForm({
                                      enableReinitialize = true,
                                      roles = [],
                                      backLinkPath,
-                                     password = false
+                                     password = false,
+                                     ref
                                  }) {
+    const formikRef = useRef(null);
+    const [showPassword, setShowPassword] = useState(false);
+
+    useImperativeHandle(ref, () => ({
+        setPassword: (newPassword) => {
+            if (formikRef.current) {
+                formikRef.current.setFieldValue("password", newPassword);
+                formikRef.current.setFieldValue("password_confirmation", newPassword);
+            }
+        }
+    }));
+
     return (
         <Formik
+            innerRef={formikRef}
             initialValues={current ? current : defaultCurrent}
             enableReinitialize={enableReinitialize}
             validationSchema={Yup.object().shape({
@@ -94,18 +109,29 @@ export default function UserForm({
                                 <Label>
                                     Password <span className="text-error-500">*</span>{" "}
                                 </Label>
-                                <Field
-                                    name="password"
-                                    placeholder="Password"
-                                    type="password"
-                                    id="password"
-                                    component={FormikInput}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    // value={values.password}
-                                    error={Boolean(errors.password && touched.password)}
-                                    helperText={touched.password && errors.password}
-                                />
+                                <div className="relative">
+                                    <Field
+                                        name="password"
+                                        placeholder="Password"
+                                        type={showPassword ? "text" : "password"}
+                                        id="password"
+                                        component={FormikInput}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        // value={values.password}
+                                        error={Boolean(errors.password && touched.password)}
+                                        helperText={touched.password && errors.password}
+                                    />
+                                    <span
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                                    >{showPassword ? (
+                                        <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5"/>
+                                    ) : (
+                                        <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5"/>
+                                    )}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div className="space-y-6">
@@ -113,17 +139,28 @@ export default function UserForm({
                                 <Label>
                                     Confirm password <span className="text-error-500">*</span>{" "}
                                 </Label>
-                                <Field
-                                    name="password_confirmation"
-                                    placeholder="Confirm password"
-                                    type="password"
-                                    id="password_confirmation"
-                                    component={FormikInput}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={Boolean(errors.password_confirmation && touched.password_confirmation)}
-                                    helperText={touched.password_confirmation && errors.password_confirmation}
-                                />
+                                <div className="relative">
+                                    <Field
+                                        name="password_confirmation"
+                                        placeholder="Confirm password"
+                                        type={showPassword ? "text" : "password"}
+                                        id="password_confirmation"
+                                        component={FormikInput}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={Boolean(errors.password_confirmation && touched.password_confirmation)}
+                                        helperText={touched.password_confirmation && errors.password_confirmation}
+                                    />
+                                    <span
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                                    >{showPassword ? (
+                                        <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5"/>
+                                    ) : (
+                                        <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5"/>
+                                    )}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
