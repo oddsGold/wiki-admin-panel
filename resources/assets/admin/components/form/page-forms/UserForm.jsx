@@ -4,10 +4,9 @@ import * as Yup from "yup";
 import Label from "../Label.jsx";
 import FormikInput from "../input/FormikInput.jsx";
 import FormikSelect from "../input/FormikSelect.jsx";
-import Button from "../../ui/button/Button.jsx";
 import Switch from "../switch/Switch.jsx";
-import {Link} from "react-router-dom";
 import {EyeCloseIcon, EyeIcon} from "../../../icons/index.js";
+import GroupButtons from "../../ui/button/GroupButtons.jsx";
 
 export default function UserForm({
                                      current = null,
@@ -74,11 +73,12 @@ export default function UserForm({
                                 <Field
                                     id="login"
                                     placeholder="Enter your login"
-                                    name="login"
+                                    name="login1"
                                     autoFocus
                                     component={FormikInput}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
+                                    autocomplete="off"
                                     error={Boolean(errors.login && touched.login)}
                                     helperText={touched.login && errors.login}
                                 />
@@ -107,7 +107,7 @@ export default function UserForm({
                         <div className="space-y-6">
                             <div className="pb-3">
                                 <Label>
-                                    Password <span className="text-error-500">*</span>{" "}
+                                    Password
                                 </Label>
                                 <div className="relative">
                                     <Field
@@ -118,13 +118,13 @@ export default function UserForm({
                                         component={FormikInput}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
-                                        // value={values.password}
+                                        autocomplete="off"
                                         error={Boolean(errors.password && touched.password)}
                                         helperText={touched.password && errors.password}
                                     />
                                     <span
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                                        className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-[22px]"
                                     >{showPassword ? (
                                         <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5"/>
                                     ) : (
@@ -137,7 +137,7 @@ export default function UserForm({
                         <div className="space-y-6">
                             <div className="pb-3">
                                 <Label>
-                                    Confirm password <span className="text-error-500">*</span>{" "}
+                                    Confirm password
                                 </Label>
                                 <div className="relative">
                                     <Field
@@ -153,7 +153,7 @@ export default function UserForm({
                                     />
                                     <span
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                                        className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-[22px]"
                                     >{showPassword ? (
                                         <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5"/>
                                     ) : (
@@ -194,23 +194,10 @@ export default function UserForm({
                         />
                     </div>
 
-                    <div>
-                        <div className="flex flex-wrap gap-4 justify-start">
-                            <Link
-                                to={backLinkPath.current}
-                                className="inline-flex w-40 items-center justify-center gap-2 rounded-lg px-4 py-2 transition bg-green-500 text-white shadow-theme-xs hover:bg-green-600 disabled:bg-green-300">
-                                Back
-                            </Link>
-                            <Button
-                                type="submit"
-                                disabled={isSubmitting}
-                                size="sm"
-                                className="w-40"
-                            >
-                                Save
-                            </Button>
-                        </div>
-                    </div>
+                    <GroupButtons
+                        backLinkPath={backLinkPath.current}
+                        isSubmitting={isSubmitting}
+                    />
                 </Form>
             )}
         </Formik>

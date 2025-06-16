@@ -13,6 +13,7 @@ export default function CrudPage({
                                      useDeleteMutation,
                                      isFilter = false,
                                      isSearch = false,
+                                     dnd = false
                                  }) {
 
     const {
@@ -69,6 +70,7 @@ export default function CrudPage({
                         isFilter={isFilter}
                         setFilters={setFilters}
                         isLoading={isLoading}
+                        dnd={dnd}
                     />
 
                     <DeleteConfirmDialog

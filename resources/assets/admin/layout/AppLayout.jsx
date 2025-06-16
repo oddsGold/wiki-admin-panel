@@ -26,6 +26,7 @@ const LayoutContent = () => {
     };
 
     const isLoading = isAccountLoading || logoutLoading;
+    console.log(isLoading, "isAccountLoading")
 
     const acceptHandler = () => toast.warning(
         <div>

@@ -13,6 +13,7 @@ import {Loading} from "../../loadingBar/Loading.jsx";
 import PaginationInfo from "../../generics/PaginationInfo.jsx";
 import {CardGrid} from "../../ui/card/CardGrid.jsx";
 import {Link} from "react-router-dom";
+import GroupButtons from "../../ui/button/GroupButtons.jsx";
 
 export default function VideoForm({
                                       current = null,
@@ -149,21 +150,10 @@ export default function VideoForm({
                                     />}
 
                                 <div className="py-3">
-                                    <div className="flex flex-wrap gap-4 justify-start">
-                                        <Link
-                                            to={backLinkPath.current}
-                                            className="inline-flex w-40 items-center justify-center gap-2 rounded-lg px-4 py-2 transition bg-green-500 text-white shadow-theme-xs hover:bg-green-600 disabled:bg-green-300">
-                                            Back
-                                        </Link>
-                                        <Button
-                                            type="submit"
-                                            disabled={isSubmitting || !fileData}
-                                            size="sm"
-                                            className="w-40"
-                                        >
-                                            Save
-                                        </Button>
-                                    </div>
+                                    <GroupButtons
+                                        backLinkPath={backLinkPath.current}
+                                        isSubmitting={isSubmitting || !fileData}
+                                    />
                                 </div>
 
                                 <Label>Виберіть з раніше завантажених:</Label>

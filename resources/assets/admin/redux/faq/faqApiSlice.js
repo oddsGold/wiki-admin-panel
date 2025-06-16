@@ -46,6 +46,14 @@ export const faqApiSlice = api.injectEndpoints({
             invalidatesTags: ['faqs', 'currentFaq'],
             transformResponse: (response, meta, arg) => response.data,
         }),
+        updateItemPosition: builder.mutation({
+            query: (payload) => ({
+                url: '/updateItemPosition',
+                method: 'POST',
+                body: payload,
+            }),
+            invalidatesTags: ['faqs'],
+        }),
     })
 });
 
@@ -54,5 +62,6 @@ export const {
     useDeleteFaqMutation,
     useCreateFaqMutation,
     useCurrentFaqQuery,
-    useUpdateFaqMutation
+    useUpdateFaqMutation,
+    useUpdateItemPositionMutation
 } = faqApiSlice;

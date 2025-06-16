@@ -29,35 +29,36 @@ const Input = ({
   }
 
   return (
-    <div className="relative">
-      <input
-        type={type}
-        id={id}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        min={min}
-        max={max}
-        step={step}
-        disabled={disabled}
-        className={inputClasses}
-      />
-
-      {hint && (
-        <p
-          className={`mt-1.5 text-xs ${
-            error
-              ? "text-error-500"
-              : success
-              ? "text-success-500"
-              : "text-gray-500"
-          }`}
-        >
-          {hint}
-        </p>
-      )}
-    </div>
+      <>
+          <div className="relative">
+              <input
+                  type={type}
+                  id={id}
+                  name={name}
+                  placeholder={placeholder}
+                  value={value}
+                  onChange={onChange}
+                  min={min}
+                  max={max}
+                  step={step}
+                  disabled={disabled}
+                  className={inputClasses}
+              />
+          </div>
+          {hint && (
+              <p
+                  className={`mt-1.5 text-xs ${
+                      error
+                          ? "text-error-500"
+                          : success
+                              ? "text-success-500"
+                              : "text-gray-500"
+                  }`}
+              >
+                  {hint}
+              </p>
+          )}
+      </>
   );
 };
 

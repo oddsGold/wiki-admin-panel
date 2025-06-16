@@ -11,6 +11,9 @@ import DataTable from "../DataTable.jsx";
 import FilterModal from "../../ui/modal/FilterModal.jsx";
 import {useFilters} from "../../../hooks/useFilters.js";
 import FilterButton from "../../ui/button/FilterButton.jsx";
+import {HTML5Backend} from "react-dnd-html5-backend";
+import {DndProvider} from "react-dnd";
+import {closestCorners, DndContext} from "@dnd-kit/core";
 
 const multiOptions = [
     {value: "1", label: "Option 1", selected: false},
@@ -37,7 +40,8 @@ export default function BasicTable({
                                        meta,
                                        isFilter,
                                        setFilters,
-                                       isLoading
+                                       isLoading,
+                                       dnd
                                    }) {
     const location = useLocation();
     const {isOpen, openModal, closeModal} = useModal();
@@ -100,15 +104,18 @@ export default function BasicTable({
                         {search && <SearchInput/>}
                     </div>
 
-                    <DataTable
-                        data={data}
-                        gridHeaderRow={gridHeaderRow}
-                        handleDelete={handleDelete}
-                        setEditPath={setEditPath}
-                        location={location}
-                        sort={sort}
-                        setSort={setSort}
-                    />
+
+                        <DataTable
+                            data={data}
+                            gridHeaderRow={gridHeaderRow}
+                            handleDelete={handleDelete}
+                            setEditPath={setEditPath}
+                            location={location}
+                            sort={sort}
+                            setSort={setSort}
+                            dnd={dnd}
+                        />
+
 
                     <div
                         className="border border-t-0 rounded-b-xl border-gray-100 py-4 pl-[18px] pr-4 dark:border-white/[0.05]">
