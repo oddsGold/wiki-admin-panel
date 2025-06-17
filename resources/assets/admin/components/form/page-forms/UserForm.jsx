@@ -73,7 +73,7 @@ export default function UserForm({
                                 <Field
                                     id="login"
                                     placeholder="Enter your login"
-                                    name="login1"
+                                    name="login"
                                     autoFocus
                                     component={FormikInput}
                                     onChange={handleChange}

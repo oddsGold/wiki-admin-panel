@@ -49,6 +49,13 @@ export const rolesApiSlice = api.injectEndpoints({
             invalidatesTags: ['roles', 'currentRole'],
             transformResponse: (response, meta, arg) => response.data,
         }),
+        addOption: builder.mutation({
+            query: (newOption) => ({
+                url: '/add-option',
+                method: 'POST',
+                body: newOption,
+            }),
+        }),
     })
 });
 
@@ -59,4 +66,5 @@ export const {
     useCreateRoleMutation,
     useCurrentRoleQuery,
     useUpdateRoleMutation,
+    useAddOptionMutation
 } = rolesApiSlice;

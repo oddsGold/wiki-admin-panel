@@ -1,41 +1,44 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Table, TableBody, TableCell, TableHeader, TableRow} from "../ui/table/index.jsx";
 import {handleSort} from "../utils/handleSort.js";
 import {SortableContext, verticalListSortingStrategy} from "@dnd-kit/sortable";
 import DataTableRow from "./DataTableRow.jsx";
 import {closestCorners, DndContext} from "@dnd-kit/core";
 import {restrictToVerticalAxis} from '@dnd-kit/modifiers'
-import {acceptHandler, errorHandler} from "../utils/toastHandler.js";
+import {acceptHandler} from "../utils/toastHandler.js";
 import {useUpdateItemPositionMutation} from "../../redux/faq/faqApiSlice.js";
+import {useDragAndDropUpdate} from "../../hooks/useDragAndDropUpdate.js";
 
 
 const DataTable = ({data, gridHeaderRow, handleDelete, setEditPath, location, sort, setSort, dnd}) => {
 
     const [updatePosition, {isLoading}] = useUpdateItemPositionMutation();
 
-    // У контексті бібліотеки @dnd-kit, active та over є об'єктами, що містять інформацію про ці елементи:
-    // active – це елемент, який перетягується. Його властивість id містить ідентифікатор цього елемента.
-    //     over – це елемент, на який перетягнули активний елемент. Його властивість id містить ідентифікатор елемента, над яким знаходиться перетягуваний елемент.
-    //     Як це працює:
-    //     active.id – це ID перетягуваного елемента.
-    //     over.id – це ID елемента, над яким знаходиться перетягуваний елемент (якщо він є).
-    const handleDragEnd = async (event) => {
-        const {active, over} = event;
-        console.log(active, over);
-        if (active.id === over.id) return;
+    const updatePositionToApi = useCallback(async (newData) => {
+        const payload = newData.map((item) => item.id.toString());
+        await updatePosition({ sequence: payload }).unwrap();
+        acceptHandler("Порядок записів змінено");
+    }, [updatePosition]);
 
-        const payload = {
-            movedItemId: active.id,  // ID перетягнутого елемента
-            targetItemId: over.id,   // ID елемента, на який перетягнули
-        };
+    const getNewData = useCallback((currentData, activeId, overId) => {
+        const activeIndex = currentData.findIndex((item) => item.id === activeId);
+        const overIndex = currentData.findIndex((item) => item.id === overId);
 
-        try {
-            await updatePosition({data: payload}).unwrap();
-            acceptHandler("Позицію змінено");
-        } catch (err) {
-            errorHandler(err.data.message);
-        }
-    }
+        const newData = [...currentData];
+        const [removed] = newData.splice(activeIndex, 1);
+        newData.splice(overIndex, 0, removed);
+        return newData;
+    }, []);
+
+    const {
+        localData,
+        handleDragStart,
+        handleDragEnd
+    } = useDragAndDropUpdate(data, updatePositionToApi);
+
+    const onDragEnd = useCallback((event) => {
+        handleDragEnd(event, getNewData);
+    }, [handleDragEnd, getNewData]);
 
     return (
         <Table className="w-full overflow-hidden">
@@ -82,10 +85,11 @@ const DataTable = ({data, gridHeaderRow, handleDelete, setEditPath, location, so
                     <DndContext
                         collisionDetection={closestCorners}
                         modifiers={[restrictToVerticalAxis]}
-                        onDragEnd={handleDragEnd}
+                        onDragStart={handleDragStart}
+                        onDragEnd={onDragEnd}
                     >
-                        <SortableContext items={data} strategy={verticalListSortingStrategy}>
-                            {data.map((row, rowIndex) => (
+                        <SortableContext items={localData.map(item => item.id)} strategy={verticalListSortingStrategy}>
+                            {localData.map((row, rowIndex) => (
                                 <DataTableRow
                                     key={row.id}
                                     id={row.id}
