@@ -75,4 +75,4 @@ export const {
     useDeleteUserMutation,
     useUpdateEmailMutation,
     useUpdatePasswordMutation,
-} = usersApiSlice;
+} = usersApiSlice; 
