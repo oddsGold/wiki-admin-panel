@@ -66,4 +66,7 @@ export default defineConfig({
         setupFiles: './resources/assets/admin/setupTests.js',
         // coverage: { reporter: ['text', 'html'] },
     },
+    server: {
+        hmr: process.env.NODE_ENV !== 'production', 
+    },
 });
