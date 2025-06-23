@@ -60,4 +60,10 @@ export default defineConfig({
         }),
         ckeditor5({theme: require.resolve('@ckeditor/ckeditor5-theme-lark')})
     ],
+    test: {
+        environment: 'jsdom',
+        globals: true,
+        setupFiles: './resources/assets/admin/setupTests.js',
+        // coverage: { reporter: ['text', 'html'] },
+    },
 });

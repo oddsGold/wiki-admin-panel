@@ -1,0 +1,34 @@
+name: CI for React
+
+on:
+  push:
+    branches:
+      - master   # або master, в залежності від вашої основної гілки
+  pull_request:
+    branches:
+      - master   # або master
+
+jobs:
+  test-react:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout репозиторію
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Налаштування Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      # 3. Встановлення залежностей для React
+      - name: Install dependencies for React
+        run: |
+          npm install
+
+      # 4. Запуск тестів для React
+      - name: Run tests for React
+        run: |
+          npm run test -- --coverage

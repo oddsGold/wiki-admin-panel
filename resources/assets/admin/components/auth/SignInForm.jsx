@@ -34,7 +34,10 @@ export default function SignInForm() {
             setSubmitting(false);
             navigate('/admin/dashboard', { replace: true });
         } catch (err) {
-            errorHandler(err.data.message);
+            const msg = err?.data?.message ?? "";
+
+            errorHandler(msg);
+            setErrMsg(msg);
             if (errRef.current) {
                 errRef.current.focus();
             }
@@ -58,7 +61,10 @@ export default function SignInForm() {
                         <Formik
                             initialValues={{login: '', password: ''}}
                             validationSchema={Yup.object({
-                                login: Yup.string().required('Name is required').max(255),
+                                login: Yup.string()
+                                    .min(3, 'Login must be at least 3 characters')
+                                    .max(255, 'Login must be at most 255 characters')
+                                    .required('Name is required'),
                                 password: Yup.string()
                                     .min(3, 'Password must be at least 3 characters')
                                     .max(255, 'Password must be at most 255 characters')
@@ -70,7 +76,7 @@ export default function SignInForm() {
                                 <Form autoComplete="off">
                                     <div className="space-y-6">
                                         <div>
-                                            <Label>
+                                            <Label htmlFor="login">
                                                 Login <span className="text-error-500">*</span>{" "}
                                             </Label>
                                             <Field
@@ -87,7 +93,7 @@ export default function SignInForm() {
                                             />
                                         </div>
                                         <div>
-                                            <Label>
+                                            <Label htmlFor="password">
                                                 Password <span className="text-error-500">*</span>{" "}
                                             </Label>
                                             <div className="relative">
@@ -105,6 +111,7 @@ export default function SignInForm() {
                                                 />
                                                 <span
                                                     onClick={() => setShowPassword(!showPassword)}
+                                                    data-testid="toggle-password"
                                                     className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
                                                 >
                       {showPassword ? (

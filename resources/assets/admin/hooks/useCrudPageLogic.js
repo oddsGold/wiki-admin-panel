@@ -13,7 +13,7 @@ export function useCrudPageLogic({ useQuery, useDeleteMutation = null, initialLi
     const [hasMore, setHasMore] = useState(true);
     const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-    const [filters, setFilters] = useState(null);
+    const [filters, setFilters] = useState({});
     const queryParams = {
         page,
         limit,
@@ -70,7 +70,7 @@ export function useCrudPageLogic({ useQuery, useDeleteMutation = null, initialLi
             setOpenDialog(false);
             setItemToDelete(null);
         } catch (err) {
-            errorHandler(err.data.message);
+            errorHandler(err?.data?.message || err?.message || '');
             setOpenDialog(false);
             setItemToDelete(null);
         }

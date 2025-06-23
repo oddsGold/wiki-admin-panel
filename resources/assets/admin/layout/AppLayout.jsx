@@ -26,7 +26,10 @@ const LayoutContent = () => {
     };
 
     const isLoading = isAccountLoading || logoutLoading;
-    console.log(isLoading, "isAccountLoading")
+    console.log(isAccountLoading, "isAccountLoading");
+    console.log(isAccountError, "isAccountError");
+    console.log(user, "user");
+
 
     const acceptHandler = () => toast.warning(
         <div>
@@ -59,22 +62,23 @@ const LayoutContent = () => {
                     isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"
                 } ${isMobileOpen ? "ml-0" : ""}`}
             >
-                {!isLoading && (
-                    <AppHeader
-                        user={user}
-                        handleLogout={handleLogout}
-                    />
-                )}
-
-                <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
-                    {isLoading ? (
-                        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-gray-900/60 rounded-3xl">
-                            <Loading />
+                {(isAccountLoading || logoutLoading) ? (
+                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-gray-900/60 rounded-3xl">
+                        <Loading />
+                    </div>
+                ) : (
+                    <>
+                        {!isAccountError && user && (
+                            <AppHeader
+                                user={user}
+                                handleLogout={handleLogout}
+                            />
+                        )}
+                        <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+                            <Outlet />
                         </div>
-                    ) : (
-                        <Outlet />
-                    )}
-                </div>
+                    </>
+                )}
             </div>
         </div>
     );
