@@ -9,6 +9,9 @@ const require = createRequire(import.meta.url);
 
 
 export default defineConfig({
+    server: {
+        hmr: process.env.NODE_ENV !== 'production',
+    },
     build: {
         rollupOptions: {
             output: {
@@ -65,8 +68,5 @@ export default defineConfig({
         globals: true,
         setupFiles: './resources/assets/admin/setupTests.js',
         // coverage: { reporter: ['text', 'html'] },
-    },
-    server: {
-        hmr: process.env.NODE_ENV !== 'production', 
     },
 });
