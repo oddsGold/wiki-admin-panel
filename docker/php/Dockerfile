@@ -41,6 +41,8 @@ RUN ln -sf /var/www/storage/app/public/uploads /var/www/public/uploads
 # Встановлюємо залежності Composer
 RUN composer install --no-interaction --prefer-dist
 
+RUN php artisan key:generate
+
 #php artisan kay:generate
 RUN php artisan migrate --force
 

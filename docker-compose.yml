@@ -20,9 +20,9 @@ services:
     git-clone-service:
         image: alpine:latest
         container_name: git-clone
-        command: /bin/sh -c "git clone https://github.com/yourusername/yourrepository.git /var/www && chown -R www-data:www-data /var/www"
+        command: /bin/sh -c "git clone https://github.com/oddsGold/wiki-admin-panel.git /var/www && chown -R www-data:www-data /var/www"
         volumes:
-            - ./WWW:/var/www  # Замість ./WWW підставте потрібну директорію для вашого проєкту
+            - .:/var/www
         networks:
             - workspace
 
