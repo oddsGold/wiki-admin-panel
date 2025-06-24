@@ -3,10 +3,10 @@ name: CI for React
 on:
   push:
     branches:
-      - master   # або master, в залежності від вашої основної гілки
+      - master
   pull_request:
     branches:
-      - master   # або master
+      - master
 
 jobs:
   test-react:
