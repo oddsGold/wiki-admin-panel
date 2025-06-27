@@ -26,7 +26,7 @@ export default defineConfig({
                     }
 
                     if (imageExtensions.includes(extension)) {
-                        return 'images/[name]-[hash][extname]';
+                        return 'assets/images/[name]-[hash][extname]';
                     }
                     if (fontExtensions.includes(extension)) {
                         return 'assets/fonts/[name]-[hash][extname]';
@@ -41,14 +41,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/assets/admin/style/index.sass',
-                'resources/assets/admin/main.jsx',
-                // 'resources/assets/admin/style/fonts.css',
-
-                // 'resources/assets/site/style/index.sass',
-                // 'resources/assets/site/style/fonts.css',
-                // 'resources/assets/site/js/index.js',
-                // 'resources/assets/site/js/libs.js',
-                // 'resources/assets/site/js/react.jsx',
+                'resources/assets/admin/main.jsx'
             ],
             refresh: true,
         }),
