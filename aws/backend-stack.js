@@ -56,4 +56,4 @@ class MyEc2AppStack extends Stack {
     }
 }
 
-module.exports = { MyEc2AppStack };
+export { MyEc2AppStack };
