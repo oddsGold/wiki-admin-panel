@@ -40,6 +40,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: CDK Bootstrap
+        run: |
+          npx cdk bootstrap aws://${{ secrets.AWS_ACCOUNT_ID }}/us-east-1 \
+            --toolkit-stack-name CDKToolkit \
+            --require-approval never
+
 
       - name: CDK Synth
         run: cdk synth
