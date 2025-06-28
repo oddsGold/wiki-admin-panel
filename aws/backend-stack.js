@@ -1,0 +1,59 @@
+import { Stack } from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as iam from 'aws-cdk-lib/aws-iam';
+
+class MyEc2AppStack extends Stack {
+    constructor(scope, id, props) {
+        super(scope, id, props);
+
+        // 1. Створюємо VPC
+        const vpc = new ec2.Vpc(this, 'MyVpc', { maxAzs: 3 });
+
+        // 2. Створюємо роль IAM для EC2 інстансу
+        const role = new iam.Role(this, 'MyEc2Role', {
+            assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
+            managedPolicies: [
+                iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'), // для використання SSM
+            ],
+        });
+
+        // 3. Створюємо EC2 інстанс
+        const instance = new ec2.Instance(this, 'MyInstance', {
+            instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO), // можна вибрати більш потужний тип
+            machineImage: ec2.MachineImage.latestAmazonLinux(), // використання Amazon Linux 2
+            vpc,
+            role,
+            keyName: 'my-key-pair', // вказати свій SSH ключ для підключення до інстансу
+        });
+
+        // 4. Дозволяємо HTTP трафік на інстанс (публічний доступ до порту 80)
+        instance.connections.allowFromAnyIpv4(ec2.Port.tcp(80), 'Allow HTTP');
+
+        // 5. Встановлюємо Docker та Docker Compose через UserData
+        instance.userData.addCommands(
+            'sudo yum update -y', // оновлюємо систему
+            'sudo yum install -y docker', // встановлюємо Docker
+            'sudo yum install -y docker-compose', // встановлюємо Docker Compose
+            'sudo systemctl start docker', // запускаємо Docker
+            'sudo systemctl enable docker', // додаємо Docker в автозапуск
+            'sudo usermod -aG docker ec2-user', // додаємо користувача до групи docker
+            'docker --version', // перевірка версії Docker
+            'docker-compose --version', // перевірка версії Docker Compose
+            'docker-compose -f /home/ec2-user/docker-compose.yml up -d' // запускаємо контейнер із Docker Compose
+        );
+
+        // 6. Підключення публічного IP для EC2
+        const eip = new ec2.CfnEIP(this, 'MyEIP', {
+            instanceId: instance.instanceId,
+        });
+
+        // 7. При необхідності, можна додати DNS запис для Route 53
+        // new route53.ARecord(this, 'AliasRecord', {
+        //     zone: hostedZone,
+        //     target: route53.RecordTarget.fromIpAddresses(eip.ref),
+        //     recordName: 'my-website.example.com',
+        // });
+    }
+}
+
+module.exports = { MyEc2AppStack };
