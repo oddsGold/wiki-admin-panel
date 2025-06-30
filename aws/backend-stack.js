@@ -36,20 +36,33 @@ class MyEc2AppStack extends Stack {
         instance.connections.allowFromAnyIpv4(ec2.Port.tcp(80), 'Allow HTTP');
 
         // 5. Встановлюємо Docker та Docker Compose через UserData
+// …попередні імпорт і створення instance…
+
+// 5. User-data
         instance.userData.addCommands(
-            '#!/bin/bash',
-            'set -xe',
+            '#!/bin/bash -xe',          // шебанг + режим “виводити та лізити по помилках”
+            // 1. Оновлення та установка самого Docker (moby-engine), CLI, Git і curl
             'dnf update -y',
-            'dnf install -y docker git',
+            'dnf install -y moby-engine moby-cli git curl',
+
+            // 2. Запускаємо Docker та додаємо в автозапуск
             'systemctl enable --now docker',
-            'curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose',
+
+            // 3. Встановлюємо docker-compose (standalone)
+            'curl -fsSL "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose',
             'chmod +x /usr/local/bin/docker-compose',
+
+            // 4. Клонуємо репозиторій у /home/ec2-user/app
             'cd /home/ec2-user',
             'rm -rf app',
             'git clone https://github.com/oddsGold/wiki-admin-panel.git app',
+
+            // 5. Заходимо в теку з docker-compose.yml і запускаємо стек
             'cd app',
             'docker-compose up -d'
         );
+
+
 
 
 
