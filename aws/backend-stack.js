@@ -41,14 +41,35 @@ class MyEc2AppStack extends Stack {
 // 5. User-data
         instance.userData.addCommands(
             '#!/bin/bash -xe',
+            // Оновлення системи
             'dnf update -y',
-            'dnf install -y moby-engine docker-compose git',
+
+            // Встановлення необхідних пакетів
+            'dnf install -y moby-engine git python3-pip',
+            'pip3 install docker-compose',
+
+            // Налаштування Docker
+            'usermod -aG docker ec2-user',
             'systemctl enable --now docker',
+
+            // Очікування запуску Docker (важливо для подальших команд)
+            'while ! docker info >/dev/null 2>&1; do sleep 1; done',
+
+            // Робота з проектом
             'cd /home/ec2-user',
             'rm -rf app',
             'git clone https://github.com/oddsGold/wiki-admin-panel.git app',
             'cd app',
-            'docker-compose up -d'
+
+            // Створення .env файлу, якщо його немає
+            'if [ ! -f .env ]; then cp .env.example .env; fi',
+
+            // Запуск контейнерів
+            'docker-compose up -d --build',
+
+            // Додаткові права для папок (якщо потрібно для Laravel)
+            'chown -R ec2-user:ec2-user /home/ec2-user/app',
+            'chmod -R 775 /home/ec2-user/app/storage /home/ec2-user/app/bootstrap/cache'
         );
 
 
