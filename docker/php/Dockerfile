@@ -33,19 +33,20 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure zip \
     && docker-php-ext-install zip
 
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY composer.json composer.lock ./
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 COPY . .
-
 RUN chown -R www-data:www-data /var/www/storage \
     && chmod -R 775 /var/www/storage \
     && ln -sf /var/www/storage/app/public/uploads /var/www/public/uploads
 
-RUN composer install --no-interaction --prefer-dist \
-    && php artisan key:generate
+RUN php artisan key:generate
 
 COPY ./docker/db/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
