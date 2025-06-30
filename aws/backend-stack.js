@@ -35,24 +35,21 @@ class MyEc2AppStack extends Stack {
 
         // 5. Встановлюємо Docker та Docker Compose через UserData
         instance.userData.addCommands(
-            // Оновлення та установка необхідного софту
             'yum update -y',
             'yum install -y docker git',
-            'curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose',
-            'chmod +x /usr/local/bin/docker-compose',
-
-            // Запуск Docker
             'systemctl start docker',
             'systemctl enable docker',
 
-            // Клон репозиторію з GitHub (публічний)
-            'cd /home/ec2-user',
-            'git clone https://github.com/oddsGold/wiki-admin-panel.git app',
+        'yum install -y docker-compose-plugin',
+            // 'curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose',
+            // 'chmod +x /usr/local/bin/docker-compose',
 
-            // Перехід у теку з docker-compose.yml і запуск
-            'cd app',
-            'docker-compose up -d'
-        );
+            'cd /home/ec2-user/app',
+                // для плагина:
+                'docker compose up -d',
+        // для standalone:
+        // 'docker-compose up -d'
+    );
 
         // 6. Підключення публічного IP для EC2
         const eip = new ec2.CfnEIP(this, 'MyEIP', {
