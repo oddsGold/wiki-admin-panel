@@ -42,10 +42,13 @@ class MyEc2AppStack extends Stack {
 
             // 1. Оновлюємо систему та встановлюємо Docker, плагін і Git
             'dnf update -y',
-            'dnf install -y docker docker-compose-plugin git',
+            'dnf install -y docker git',
 
             // 2. Запускаємо та вмикаємо Docker
             'systemctl enable --now docker',
+
+            'curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose',
+            'chmod +x /usr/local/bin/docker-compose',
 
             // 3. Переходимо в домашню директорію, видаляємо старе, клонуємо репозиторій
             'cd /home/ec2-user',
