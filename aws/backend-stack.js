@@ -35,26 +35,25 @@ class MyEc2AppStack extends Stack {
 
         // 5. Встановлюємо Docker та Docker Compose через UserData
         instance.userData.addCommands(
+            // 1) Оновлюємо систему
             'yum update -y',
-            'yum install -y docker git',
-            'systemctl start docker',
-            'systemctl enable docker',
 
-        'yum install -y docker-compose-plugin',
-            // 'curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose',
-            // 'chmod +x /usr/local/bin/docker-compose',
+            // 2) Ставимо Docker через amazon-linux-extras + Git + плагін Docker Compose
+            'amazon-linux-extras install -y docker',
+            'yum install -y git docker-compose-plugin',
 
-            'cd /home/ec2-user/app',
-                // для плагина:
-                'docker compose up -d',
-        // для standalone:
-        // 'docker-compose up -d'
-    );
+            // 3) Запускаємо й додаємо в автозапуск Docker
+            'systemctl enable --now docker',
 
-        // 6. Підключення публічного IP для EC2
-        const eip = new ec2.CfnEIP(this, 'MyEIP', {
-            instanceId: instance.instanceId,
-        });
+            // 4) Переходимо в домашню теку ec2-user і клоніруємо ваш репозиторій
+            'cd /home/ec2-user',
+            'rm -rf app',  // почистимо, якщо було
+            'git clone https://github.com/oddsGold/wiki-admin-panel.git app',
+
+            // 5) Переключаємося в теку з docker-compose.yml і піднімаємо сервіси
+            'cd app',
+            'docker compose up -d'
+        );
 
         // 7. При необхідності, можна додати DNS запис для Route 53
         // new route53.ARecord(this, 'AliasRecord', {
