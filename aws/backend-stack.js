@@ -35,24 +35,31 @@ class MyEc2AppStack extends Stack {
 
         // 5. Встановлюємо Docker та Docker Compose через UserData
         instance.userData.addCommands(
-            // 1) Оновлюємо систему
+            '#!/bin/bash',
+            'set -xe',
+
+            // 1. Оновимо OS і встановимо Docker + Git
             'yum update -y',
+            'amazon-linux-extras install docker -y',
+            'yum install -y git',
 
-            // 2) Ставимо Docker через amazon-linux-extras + Git + плагін Docker Compose
-            'amazon-linux-extras install -y docker',
-            'yum install -y git docker-compose-plugin',
-
-            // 3) Запускаємо й додаємо в автозапуск Docker
+            // 2. Запустимо та ввімкнемо Docker
             'systemctl enable --now docker',
 
-            // 4) Переходимо в домашню теку ec2-user і клоніруємо ваш репозиторій
-            'cd /home/ec2-user',
-            'rm -rf app',  // почистимо, якщо було
-            'git clone https://github.com/oddsGold/wiki-admin-panel.git app',
+            // 3. Встановимо docker-compose
+            // Варіант A: плагін
+            'yum install -y docker-compose-plugin || true',
+            // Варіант B: standalone (закоментуйте один з варіантів, щоб не було конфлікту)
+            'curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose',
+            'chmod +x /usr/local/bin/docker-compose',
 
-            // 5) Переключаємося в теку з docker-compose.yml і піднімаємо сервіси
+            // 4. Клонуємо ваш репозиторій і піднімаємо стеки
+            'cd /home/ec2-user',
+            'rm -rf app',
+            'git clone https://github.com/oddsGold/wiki-admin-panel.git app',
             'cd app',
-            'docker compose up -d'
+            // в залежності від того, як у вас в проекті називається команда:
+            '/usr/local/bin/docker-compose up -d || docker compose up -d'
         );
 
         // 7. При необхідності, можна додати DNS запис для Route 53
