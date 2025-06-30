@@ -35,15 +35,23 @@ class MyEc2AppStack extends Stack {
 
         // 5. Встановлюємо Docker та Docker Compose через UserData
         instance.userData.addCommands(
-            'sudo yum update -y', // оновлюємо систему
-            'sudo yum install -y docker', // встановлюємо Docker
-            'sudo yum install -y docker-compose', // встановлюємо Docker Compose
-            'sudo systemctl start docker', // запускаємо Docker
-            'sudo systemctl enable docker', // додаємо Docker в автозапуск
-            'sudo usermod -aG docker ec2-user', // додаємо користувача до групи docker
-            'docker --version', // перевірка версії Docker
-            'docker-compose --version', // перевірка версії Docker Compose
-            'docker-compose -f /home/ec2-user/docker-compose.yml up -d' // запускаємо контейнер із Docker Compose
+            // Оновлення та установка необхідного софту
+            'yum update -y',
+            'yum install -y docker git',
+            'curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose',
+            'chmod +x /usr/local/bin/docker-compose',
+
+            // Запуск Docker
+            'systemctl start docker',
+            'systemctl enable docker',
+
+            // Клон репозиторію з GitHub (публічний)
+            'cd /home/ec2-user',
+            'git clone https://github.com/oddsGold/wiki-admin-panel.git app',
+
+            // Перехід у теку з docker-compose.yml і запуск
+            'cd app',
+            'docker-compose up -d'
         );
 
         // 6. Підключення публічного IP для EC2
