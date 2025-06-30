@@ -23,15 +23,13 @@ class MyEc2AppStack extends Stack {
 
         // 3. Створюємо EC2 інстанс
         const instance = new ec2.Instance(this, 'MyInstance', {
-            instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO), // можна вибрати більш потужний тип
-            machineImage: ec2.MachineImage.latestAmazonLinux({
-                generation: AmazonLinuxGeneration.AMAZON_LINUX_2023,
-                edition: AmazonLinuxEdition.STANDARD,
-                storage: AmazonLinuxStorage.GENERAL_PURPOSE,
-            }), // використання Amazon Linux 2
+            instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO),
+            machineImage: new ec2.AmazonLinuxImage({
+                generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2023,
+            }),
             vpc,
             role,
-            keyName: key.keyName, // вказати свій SSH ключ для підключення до інстансу
+            keyName: key.keyName,
         });
 
         // 4. Дозволяємо HTTP трафік на інстанс (публічний доступ до порту 80)
