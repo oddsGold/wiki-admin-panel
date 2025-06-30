@@ -24,7 +24,11 @@ class MyEc2AppStack extends Stack {
         // 3. Створюємо EC2 інстанс
         const instance = new ec2.Instance(this, 'MyInstance', {
             instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO), // можна вибрати більш потужний тип
-            machineImage: ec2.MachineImage.latestAmazonLinux2(), // використання Amazon Linux 2
+            machineImage: ec2.MachineImage.latestAmazonLinux({
+                generation: AmazonLinuxGeneration.AMAZON_LINUX_2023,
+                edition: AmazonLinuxEdition.STANDARD,
+                storage: AmazonLinuxStorage.GENERAL_PURPOSE,
+            }), // використання Amazon Linux 2
             vpc,
             role,
             keyName: key.keyName, // вказати свій SSH ключ для підключення до інстансу
@@ -38,29 +42,23 @@ class MyEc2AppStack extends Stack {
             '#!/bin/bash',
             'set -xe',
 
-            // 1. Оновимо OS і встановимо Docker + Git
-            'yum update -y',
-            'amazon-linux-extras install docker -y',
-            'yum install -y git',
+            // 1. Оновлюємо систему та встановлюємо Docker, плагін і Git
+            'dnf update -y',
+            'dnf install -y docker docker-compose-plugin git',
 
-            // 2. Запустимо та ввімкнемо Docker
+            // 2. Запускаємо та вмикаємо Docker
             'systemctl enable --now docker',
 
-            // 3. Встановимо docker-compose
-            // Варіант A: плагін
-            'yum install -y docker-compose-plugin || true',
-            // Варіант B: standalone (закоментуйте один з варіантів, щоб не було конфлікту)
-            'curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose',
-            'chmod +x /usr/local/bin/docker-compose',
-
-            // 4. Клонуємо ваш репозиторій і піднімаємо стеки
+            // 3. Переходимо в домашню директорію, видаляємо старе, клонуємо репозиторій
             'cd /home/ec2-user',
             'rm -rf app',
             'git clone https://github.com/oddsGold/wiki-admin-panel.git app',
+
+            // 4. Заходимо в папку з docker-compose.yml та запускаємо стек
             'cd app',
-            // в залежності від того, як у вас в проекті називається команда:
-            '/usr/local/bin/docker-compose up -d || docker compose up -d'
+            'docker compose up -d'
         );
+
 
         // 7. При необхідності, можна додати DNS запис для Route 53
         // new route53.ARecord(this, 'AliasRecord', {
