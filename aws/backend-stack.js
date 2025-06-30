@@ -1,4 +1,4 @@
-import { Stack } from 'aws-cdk-lib';
+import {Stack} from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
 
@@ -7,13 +7,21 @@ class MyEc2AppStack extends Stack {
         super(scope, id, props);
 
         // 1. Створюємо VPC
-        const vpc = new ec2.Vpc(this, 'MyVpc', { maxAzs: 3 });
+        const vpc = new ec2.Vpc(this, 'MyVpc', {
+            natGateways: 0,
+            subnetConfiguration: [
+                {
+                    name: 'public-subnet',
+                    subnetType: ec2.SubnetType.PUBLIC,
+                }
+            ],
+        });
 
         // 2. Створюємо роль IAM для EC2 інстансу
         const role = new iam.Role(this, 'MyEc2Role', {
             assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
             managedPolicies: [
-                iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'), // для використання SSM
+                iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'),
             ],
         });
 
@@ -28,6 +36,9 @@ class MyEc2AppStack extends Stack {
                 generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2023,
             }),
             vpc,
+            vpcSubnets: {
+                subnetType: ec2.SubnetType.PUBLIC,
+            },
             role,
             keyName: key.keyName,
         });
@@ -36,44 +47,42 @@ class MyEc2AppStack extends Stack {
         instance.connections.allowFromAnyIpv4(ec2.Port.tcp(80), 'Allow HTTP');
 
         // 5. Встановлюємо Docker та Docker Compose через UserData
-// …попередні імпорт і створення instance…
-
-// 5. User-data
         instance.userData.addCommands(
             '#!/bin/bash -xe',
-            // Оновлення системи
-            'dnf update -y',
+            // Оновлення та встановлення пакетів
+            'sudo yum update -y',
+            'sudo yum install -y docker git python3-pip',
 
-            // Встановлення необхідних пакетів
-            'dnf install -y moby-engine git python3-pip',
-            'pip3 install docker-compose',
+            // Встановлення останньої версії docker-compose
+            'sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose',
+            'sudo chmod +x /usr/local/bin/docker-compose',
 
             // Налаштування Docker
-            'usermod -aG docker ec2-user',
-            'systemctl enable --now docker',
+            'sudo usermod -aG docker ec2-user',
+            'sudo systemctl enable docker.service',
+            'sudo systemctl start docker.service',
 
-            // Очікування запуску Docker (важливо для подальших команд)
-            'while ! docker info >/dev/null 2>&1; do sleep 1; done',
+            // Оновлення груп для поточної сесії
+            'exec sg docker -c "',  // Починаємо нову сесію з групою docker
 
             // Робота з проектом
             'cd /home/ec2-user',
-            'rm -rf app',
+            'sudo rm -rf app',
             'git clone https://github.com/oddsGold/wiki-admin-panel.git app',
             'cd app',
 
-            // Створення .env файлу, якщо його немає
-            'if [ ! -f .env ]; then cp .env.example .env; fi',
+            // Створення .env файлу
+            'touch .env',
+
+            // Права для Laravel
+            'sudo chown -R ec2-user:ec2-user /home/ec2-user/app',
+            'sudo chmod -R 775 storage bootstrap/cache',
 
             // Запуск контейнерів
             'docker-compose up -d --build',
 
-            // Додаткові права для папок (якщо потрібно для Laravel)
-            'chown -R ec2-user:ec2-user /home/ec2-user/app',
-            'chmod -R 775 /home/ec2-user/app/storage /home/ec2-user/app/bootstrap/cache'
+            '"'  // Закриваємо сесію sg docker
         );
-
-
-
 
 
         // 7. При необхідності, можна додати DNS запис для Route 53
@@ -85,4 +94,4 @@ class MyEc2AppStack extends Stack {
     }
 }
 
-export { MyEc2AppStack };
+export {MyEc2AppStack};
